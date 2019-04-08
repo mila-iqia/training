@@ -1,0 +1,19 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.log*
+*dist/
+*build/
+*-egg*/
+.idea/
+*.tmp
+*/data-LibriSpeech-ref-cksum.out
+common/perf.egg-info/*
+.nfs*
+summary.txt
+*.img
+epoch_id
+singularity/nvidia_img/
+singularity/rocm_img/
+*.pt

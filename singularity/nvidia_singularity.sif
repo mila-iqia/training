@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: pytorch/pytorch:1.0.1-cuda10.0-cudnn7-runtime
+
+%post
+    apt-get -y update
+    apt-get -y install wget ctorrent nocache sox libsox-dev libsox-fmt-all mpi-default-dev mpi-default-bin
+
+%environment
+    export BASE=/data/
+
+%labels
+    Author Mila

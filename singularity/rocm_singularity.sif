@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: rocm/pytorch:rocm2.2_ubuntu16.04_py3.6_pytorch
+
+%post
+    apt-get -y update
+    apt-get -y install wget ctorrent nocache sox libsox-dev libsox-fmt-all mpi-default-dev mpi-default-bin
+    apt-get -y remove python3.5
+    apt-get -y autoremove
+
+%setup
+     # why does that container has like 3 python versions
+     # use python 3.6 by default
+     ln -f /usr/bin/python3.6 /usr/bin/python
+     ln -f /usr/bin/python3.6 /usr/bin/python3
+
+%environment
+    export BASE=/data/
+
+%labels
+    Author Mila
