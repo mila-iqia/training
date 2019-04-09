@@ -29,6 +29,22 @@ report_folder = f'/home/setepenre/mlperf_output/'
 #     'recommendation_neural_collaborative_filtering_pytorch_ncf.py': ['loading_data', 'train_item']
 # }
 
+class Average:
+    def __init__(self, s=0, count=0):
+        self.sum = s
+        self.count = count
+        self.values = []
+
+    @property
+    def avg(self):
+        return self.sum / self.count
+
+    def __iadd__(self, other):
+        self.sum += other
+        self.count += 1
+        self.values.append(other)
+        return self
+
 
 def score(report):
     values = report['train_item']
@@ -53,6 +69,21 @@ def read_results(report_name):
     return json.loads(open(report_name, 'r').read()[:-1] + ']')
 
 
+# d = pd.DataFrame({
+#     'vendor1': {
+#         'conv': [1, 2, 3],
+#         'mnist': [1, 2, 3]
+#     },
+#     'vendor2': { # bench_name: [device_score...]
+#         'conv': [1, 2],
+#         'mnist': [1, 2]
+#     }
+# })
+# Get overall result
+# print(d.applymap(lambda x: sum(x)))
+
+
+results_break_down = {}
 overall_results = {}
 
 for vendor_name in os.listdir(report_folder):
@@ -62,22 +93,38 @@ for vendor_name in os.listdir(report_folder):
     vendor_score = 0
     gpu_count = 0
 
+    # Vendor -> Bench Name -> Score
+    breaked_down = {}
+    results_break_down[vendor_name] = breaked_down
+
     for idx, device_reports in enumerate(baselines_results):
         reports = read_results(device_reports)
+        bench_name = None
 
         device_score = 0
         bench_count = 0
 
         for bench_result in reports:
+            bench_name = bench_result['name']
             device_score += score(bench_result)
             bench_count += 1
 
-        vendor_score += device_score / bench_count
+            # Bench Name <- Score
+            if bench_name not in results_break_down:
+                breaked_down[bench_name] = Average()
+
+            breaked_down[bench_name] += device_score
+            # ---
+
+        vendor_score += bench_count / device_score
         gpu_count += 1
+
+    # All the Reports
 
     overall_results[vendor_name] = gpu_count * 100 / vendor_score
 
 
+print(json.dumps(results_break_down, indent=4))
 print(json.dumps(overall_results, indent=4))
 
 
