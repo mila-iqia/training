@@ -29,15 +29,14 @@ cat requirements | xargs pip install > /dev/null
 #  ~ 9h on a Titan Xp
 export BASE=/home/mila/mlperf
 ./run.sh [--jobs baselines.json]
-cp $BASE/output/bench_results*.json $BASE/output/baselines/
-
+cp $BASE/output/baselines*.json $BASE/output/results/
 
 # Tweak the bench for better perf
 cp baselines.json vendor.json
 vi vendor.json
 
 ./run.sh --jobs vendor.json
-cp $BASE/output/bench_result*.json $BASE/output/tweaked/
+cp $BASE/output/vendor*.json $BASE/output/results/
 
 # Push your change
 git add --all
