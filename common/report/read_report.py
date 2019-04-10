@@ -67,7 +67,9 @@ def report():
     filename = os.environ.get('REPORT_PATH', '/home/user1/mlperf/output/bench_result.csv')
 
     report_file = open(filename, 'r')
-    reports = report_file.read()[:-1] + ']'
+    reports = report_file.read().strip()
+    print(reports)
+    reports = reports[:-1] + ']'
     report_file.close()
 
     for report in reports:
@@ -75,7 +77,10 @@ def report():
 
 
 def read_results(report_name):
-    return json.loads(open(report_name, 'r').read()[:-1] + ']')
+    print(report_name)
+    str_report = open(report_name, 'r').read().strip()[:-1]
+    #print(str_report)
+    return json.loads(str_report + ']')
 
 
 def isnot_nan(x):
@@ -145,8 +150,15 @@ for vendor_name in os.listdir(report_folder):
 
 print(json.dumps(results_break_down, cls=AverageEncoder, indent=4))
 
+
+def process_multi_device(x):
+    if isinstance(x, list):
+        return [i.avg for i in x]
+    return x
+
+
 original = pd.DataFrame(results_break_down)
-per_device = original.applymap(lambda x: [i.avg for i in x])
+per_device = original.applymap(process_multi_device)
 
 cols = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -192,8 +204,16 @@ for r, row in enumerate(data, 2):
 cell = f'A{shape[0] + 5}'
 ws[cell] = 'Overall Per Bench Performance'
 
+
+def process_multi_device(x):
+    if isinstance(x, list):
+        data = list(filter(isnot_nan, x))
+        return sum(data) / len(data)
+    return x
+
+
 print()
-overall = per_device.applymap(lambda x: sum(filter(isnot_nan, x)) / len(list(filter(isnot_nan, x))))
+overall = per_device.applymap(process_multi_device)
 
 print('Overall Per Bench Performance')
 print(overall)
