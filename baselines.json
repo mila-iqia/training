@@ -141,7 +141,7 @@
       "--env-name": "\"PongNoFrameskip-v4\"",
       "--num-steps": [16, 32, 64],
       "--num-processes": [16, 32],
-      "--algo": ["ppo", "acktr"],
+      "--algo": ["ppo"],
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": ""
     },
