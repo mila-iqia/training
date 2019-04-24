@@ -288,6 +288,7 @@
       "--batch-size": [128, 256],
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--workers": 8,
+      "--ngpu": "$DEVICE_TOTAL",
       "--cuda": ""
     },
     "cgroup": "all"
