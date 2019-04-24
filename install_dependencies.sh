@@ -23,10 +23,9 @@ if [ ! -f dependencies.cache ]; then
 
     echo "Install pytorch and tensorflow now"
 
-    pip install cython
-    cat $SCRIPT_PATH/requirements.txt | xargs pip install
-    # pip install -r $SCRIPT_PATH/requirements.txt
-
+    pip install Cython
+    pip install --no-deps -r requirements.txt
+   
     echo 'DONE'
     touch dependencies.cache
 fi
