@@ -8,6 +8,8 @@ git clone ....
 cd training
 git checkout vendor
 
+sudo apt install $(cat apt-packages)
+
 ./cgroup_setup.sh
 
 # install dependencies
@@ -17,13 +19,11 @@ python setup.py install
 cd ..
 
 # install pytorch
-
-# NB: some packages have dependencies to licensed package
-# which will fail to install. Do not worry you do not need those
-# ----
+...
 
 # This will run the baselines bench
-#  ~ 9h on a Titan Xp
+#  ~ 4-9h depending on hardware
+
 export BASE=/home/mila/mlperf
 ./run.sh [--jobs baselines.json]
 cp $BASE/output/baselines*.json $BASE/output/results/
@@ -49,7 +49,7 @@ send results.zip
 You can run individual test using the command below
 
 ```bash 
-./run.sh -jobs js.json --name vae
+./run.sh -jobs baselines.json --name vae
 ```
 
 * the benchmark starts with two toy examples to make sure everything is setup properly
@@ -183,30 +183,8 @@ Report output sample
 
 FAKE_DATASET: generate a pseudo dataset instead of downloading the original
 USE_VALIDATION: use validation set to train (do not download the training dataset)
-
-
-# Run
-
-
-    # will require sudo for the apt-get install bit
-    # Install pytorch & tensorflow
-    
-    pip install -r requirements.txt
-    
-    ./install_dependencies.sh 
-    
-    ...
-    
-    ./$SCRIPT_PATH/dependencies/install_warp_ctc.sh
-    
-
-    # get the numbers
-    ./run.sh
     
 # Test Breakdown
-
-* fast_style: 1041.96
-* 
 
 # Singularity
 
