@@ -269,6 +269,7 @@
       "--repeat": 30,
       "--number": 5,
       "--batch-size": [32, 64],
+      "--workers": 8,
       "--arch": ["resnet50", "resnet101", "densenet121"],
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": "",
