@@ -50,7 +50,16 @@ excluded_arguments = {
 }
 
 not_parameter = {
-    'gpu'
+    'gpu',
+    'batch_size',
+    'num-processes',
+    'workers',
+    'cuda',
+    'report',
+    'ngpu',
+    'data',
+    'no_cuda',
+    'dataset_dir'
 }
 
 
@@ -265,7 +274,7 @@ def make_report(chrono: MultiStageChrono, args: Namespace, version: str, batch_l
     remote_logger.log_parameters(args)
     report_dict = chrono.to_dict(args)
 
-    # train is the default name for bathed stuff
+    # train is the default name for batched stuff
     if 'train' in report_dict:
         train_data = report_dict['train']
 
