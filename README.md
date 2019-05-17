@@ -5,58 +5,56 @@ Training Benchmarks
 
 ```bash
 git clone ....
-cd train_bench
+cd training
 git checkout vendor
+
+sudo apt install $(cat apt-packages)
 
 ./cgroup_setup.sh
 
 # install dependencies
-# install pytorch
+pip install --no-deps -r  requirements.txt
 cd common
 python setup.py install
 cd ..
 
-# ...
-cat requirements | xargs pip install > /dev/null
-cat requirements | xargs pip install > /dev/null
-cat requirements | xargs pip install > /dev/null
-
-# NB: some packages have dependencies to licensed package
-# which will fail to install. Do not worry you do not need those
-# ----
+# install pytorch
+...
 
 # This will run the baselines bench
-#  ~ 9h on a Titan Xp
+#  ~ 4-9h depending on hardware
+
 export BASE=/home/mila/mlperf
 ./run.sh [--jobs baselines.json]
-cp $BASE/output/bench_results*.json $BASE/output/baselines/
-
+cp $BASE/output/baselines*.json $BASE/output/results/
 
 # Tweak the bench for better perf
 cp baselines.json vendor.json
 vi vendor.json
 
 ./run.sh --jobs vendor.json
-cp $BASE/output/bench_result*.json $BASE/output/tweaked/
+cp $BASE/output/vendor*.json $BASE/output/results/
 
 # Push your change
 git add --all
 git commit -m "vendor tweaked"
 git push
 
-# send us your `$BASE/output/baselines*` and `$BASE/output/tweaked*`
+cd $BASE/output/
+zip results
+send results.zip
 
 ```
 
 You can run individual test using the command below
 
 ```bash 
-./run.sh -jobs js.json --name vae
+./run.sh -jobs baselines.json --name vae
 ```
 
 * the benchmark starts with two toy examples to make sure everything is setup properly
 
-* Each bench run `N_GPU` times in parallel with only `N_CPU / N_GPU` and `RAM / N_GPU` to simulate multiple user.
+* Each bench run `N_GPU` times in parallel with only `N_CPU / N_GPU` and `RAM / N_GPU` to simulate multiple users.
   * if your machine has 16 GPUs and 32 cores, the bench will run in parallel 16 times with only 2 cores.
 
 * Some tasks are allowed to use the machine entirely (`convnet_all`, `dcgan_all`)
@@ -66,9 +64,11 @@ You can run individual test using the command below
 * We leave it as an option to provide tweaked numbers as well. 
     * Obviously not all tweaks are equals, 
     you can find below a list from the most desirable kind of tweaks to the least desirable. 
-    NB: that some models have configurable hidden layers, obviously modifying those values are not valid optimizations
+    NB: Some models have configurable hidden layers, obviously modifying those values are not valid optimizations
     NB2: Not all models are worth optimizing
-    NB3: Some code change might be required for specific vendor 
+    NB3: Not all configuration will work but at least one should
+    NB4: Some code change might be required for specific vendor 
+    
         1. argument change (batch size, worker/process count, etc..) (no code change)
         2. environment i.e execution in an optimized container (no code change)
         3. code tweak
@@ -79,7 +79,7 @@ You can run individual test using the command below
 
 * End to End - No details; faster wins
     * Keeps track of cost value to make sure no NaNs occur
-    * Synchronization every N batch to not accidently slowdown computations
+    * Synchronization every N batch to not accidentally slowdown computations
 * all examples run independently on N GPUs
 * Some multi GPU examples (1 to N)
 * PyTorch focused
@@ -183,30 +183,8 @@ Report output sample
 
 FAKE_DATASET: generate a pseudo dataset instead of downloading the original
 USE_VALIDATION: use validation set to train (do not download the training dataset)
-
-
-# Run
-
-
-    # will require sudo for the apt-get install bit
-    # Install pytorch & tensorflow
-    
-    pip install -r requirements.txt
-    
-    ./install_dependencies.sh 
-    
-    ...
-    
-    ./$SCRIPT_PATH/dependencies/install_warp_ctc.sh
-    
-
-    # get the numbers
-    ./run.sh
     
 # Test Breakdown
-
-* fast_style: 1041.96
-* 
 
 # Singularity
 

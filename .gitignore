@@ -17,3 +17,4 @@ epoch_id
 singularity/nvidia_img/
 singularity/rocm_img/
 *.pt
+*.xlsx

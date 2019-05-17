@@ -133,8 +133,8 @@ for epoch in range(args.repeat):
             with chrono.time('loading'):
                 input, target = next_batch()
 
-                input = input.to(device)
-                target = target.to(device)
+                input = input.cuda()
+                target = target.cuda()
 
             with chrono.time('compute'):
                 output = model(input)
