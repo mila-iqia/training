@@ -286,6 +286,7 @@
       "--number": 5,
       "--batch-size": 256,
       "--workers": 8,
+      "--backend": "gloo",
       "--arch": "resnet101",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": "",

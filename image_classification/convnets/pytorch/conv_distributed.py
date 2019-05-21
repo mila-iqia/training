@@ -1,5 +1,6 @@
 from perf import *
 
+import os
 import torch
 import torch.nn as nn
 import torch.distributed as distributed
@@ -7,9 +8,7 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
 
-from perf import *
 from apex import amp
-from apex.parallel import DistributedDataParallel as DDP
 
 
 # ----
@@ -19,6 +18,8 @@ parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet18')
 parser.add_argument('--lr', '--learning-rate', default=0.1, type=float, metavar='LR')
 parser.add_argument('--opt-level', type=str)
 parser.add_argument("--local_rank", default=0, type=int)
+parser.add_argument("--world-size", default=None, type=int)
+parser.add_argument("--backend", default='gloo', type=str)
 
 # ----
 exp = Experiment(__file__)
@@ -38,11 +39,14 @@ def printf(*vargs, **kwargs):
         print(*vargs, **kwargs)
 
 
+if args.world_size is None:
+    args.world_size = torch.cuda.device_count()
+
 printf('> Init Distributed')
 torch.distributed.init_process_group(
-    backend='nccl',
+    backend=args.backend,
     init_method='env://',
-    world_size=torch.cuda.device_count(),
+    world_size=args.world_size,
     rank=args.local_rank
 )
 printf(os.environ['MASTER_ADDR'], os.environ['MASTER_PORT'])
@@ -74,7 +78,7 @@ model, optimizer = amp.initialize(
     loss_scale="dynamic",
     opt_level=args.opt_level
 )
-model = DDP(model, delay_allreduce=True)
+model = nn.DataParallel(model, delay_allreduce=True)
 
 # ----
 train_dataset = datasets.ImageFolder(
@@ -116,9 +120,13 @@ def next_batch():
 
 def reduce_tensor(tensor):
     rt = tensor.clone()
+    # if nccl API is not avaible we cannot to the reduce on GPU
+    if not torch.distributed.is_nccl_available():
+        rt = rt.cpu()
+
     distributed.all_reduce(rt, op=distributed.ReduceOp.SUM)
     rt /= world_size
-    return rt
+    return rt.cuda()
 
 
 model.train()

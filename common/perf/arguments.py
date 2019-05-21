@@ -59,7 +59,8 @@ not_parameter = {
     'ngpu',
     'data',
     'no_cuda',
-    'dataset_dir'
+    'dataset_dir',
+    'backend'
 }
 
 
