@@ -53,7 +53,6 @@ printf(os.environ['MASTER_ADDR'], os.environ['MASTER_PORT'])
 world_size = torch.distributed.get_world_size()
 os.environ['WORLD_SIZE'] = str(world_size)
 device = torch.cuda.device(args.local_rank)
-torch.cuda.set_device(args.local_rank)
 printf('< Init Distributed')
 
 # ----
@@ -78,7 +77,7 @@ model, optimizer = amp.initialize(
     loss_scale="dynamic",
     opt_level=args.opt_level
 )
-model = nn.DataParallel(model, delay_allreduce=True)
+model = nn.DataParallel(model)
 
 # ----
 train_dataset = datasets.ImageFolder(
