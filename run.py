@@ -146,6 +146,7 @@ def run_job_def(definition, name=None):
 
         print(msg)
         experiment.write(msg)
+        experiment.flush()
 
 
 def run_job_file(name):

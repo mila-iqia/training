@@ -29,7 +29,7 @@
     "args":{
       "--repeat": 100,
       "--number": 30,
-      "--batch-size": [32, 64, 128, 256],
+      "--batch-size": 128,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": ""
     },
@@ -54,7 +54,7 @@
     "cmd": "./super_resolution/subpixel_convolution/pytorch/run.sh",
     "args":{
       "--upscale_factor": 2,
-      "--batch-size": [32, 64],
+      "--batch-size": 64,
       "--testBatchSize": 8,
       "--repeat": 50,
       "--number": 20,
@@ -73,7 +73,7 @@
     "args":{
       "--repeat": 20,
       "--number": 10,
-      "--batch-size": [32, 64],
+      "--batch-size": 64,
       "--dataset-dir": "$DATA_DIRECTORY/wmt16",
       "--seed": 0,
       "--target-bleu": 21.80,
@@ -89,7 +89,7 @@
     "args":{
       "--repeat": 30,
       "--number": 5,
-      "--batch-size": [32, 64, 128, 256],
+      "--batch-size": 64,
       "--emsize":  656,
       "--nhid": 656,
       "--dropout": 0.5,
@@ -106,7 +106,7 @@
     "args":{
       "--repeat": 30,
       "--number": 5,
-      "--batch-size": [32, 64, 128, 256],
+      "--batch-size": 128,
       "--emsize":  656,
       "--nhid": 656,
       "--dropout": 0.5,
@@ -139,9 +139,9 @@
       "--repeat": 30,
       "--number": 10,
       "--env-name": "\"PongNoFrameskip-v4\"",
-      "--num-steps": [16, 32, 64],
-      "--num-processes": [16, 32],
-      "--algo": ["ppo"],
+      "--num-steps": 32,
+      "--num-processes": 16,
+      "--algo": "ppo",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": ""
     },
@@ -153,7 +153,7 @@
     "args":{
       "--repeat": 30,
       "--number": 10,
-      "--batch-size": [64, 128, 256],
+      "--batch-size": 128,
       "--seed": 0,
       "--no-save": "",
       "--workers": 8,
@@ -170,7 +170,7 @@
     "args":{
       "--repeat": 30,
       "--number": 10,
-      "--batch-size": [32, 64],
+      "--batch-size": 64,
       "--seed": 0,
       "--no-save": "",
       "--workers": 8,
@@ -187,7 +187,7 @@
     "args":{
       "--repeat": 50,
       "--number": 10,
-      "--batch-size": [32, 64, 128, 256],
+      "--batch-size": 128,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": "",
       "--workers": 8
@@ -203,7 +203,7 @@
       "--imageSize": 64,
       "--repeat": 50,
       "--number": 10,
-      "--batch-size": [32, 64, 128, 256],
+      "--batch-size":  128,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--workers": 8,
       "--cuda": ""
@@ -217,8 +217,8 @@
       "$DATA_DIRECTORY/ImageNet/train": "",
       "--repeat": 30,
       "--number": 5,
-      "--batch-size": [128, 256],
-      "--arch": ["resnet18", "resnet34", "resnet50", "resnet101", "densenet121"],
+      "--batch-size": 64,
+      "--arch": "resnet101",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--workers": 8,
       "--opt-level": "O0"
@@ -232,8 +232,8 @@
       "$DATA_DIRECTORY/ImageNet/train": "",
       "--repeat": 20,
       "--number": 5,
-      "--batch-size": [128, 256, 512],
-      "--arch": ["resnet18", "resnet34", "resnet50", "resnet101", "densenet121"],
+      "--batch-size": 128,
+      "--arch": "resnet101",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--workers": 8,
       "--cuda": "",
@@ -268,12 +268,28 @@
       "$DATA_DIRECTORY/ImageNet/train": "",
       "--repeat": 30,
       "--number": 5,
-      "--batch-size": [32, 64],
+      "--batch-size": 64,
       "--workers": 8,
-      "--arch": ["resnet50", "resnet101", "densenet121"],
+      "--arch": "resnet101",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": "",
-      "--opt-level": ["O0", "O1"]
+      "--opt-level": "O0"
+    },
+    "cgroup": "all"
+  },
+  {
+    "name": "convnet_distributed_fp16",
+    "cmd": "./image_classification/convnets/pytorch/run_distributed.sh",
+    "args":{
+      "$DATA_DIRECTORY/ImageNet/train": "",
+      "--repeat": 30,
+      "--number": 5,
+      "--batch-size": 128,
+      "--workers": 8,
+      "--arch": "resnet101",
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": "",
+      "--opt-level":  "O1"
     },
     "cgroup": "all"
   },
@@ -286,7 +302,7 @@
       "--imageSize": 64,
       "--repeat": 50,
       "--number": 10,
-      "--batch-size": [128, 256],
+      "--batch-size": 128,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--workers": 8,
       "--ngpu": "$DEVICE_TOTAL",
