@@ -7,5 +7,6 @@ source ${SCRIPT_PATH}/../../../config.env
 
 SCRIPT=${SCRIPT_PATH}/conv_distributed.py
 
+echo $MASTER_PORT
 
-$EXEC python  $SCRIPT "$@"
+$EXEC python -m torch.distributed.launch --nproc_per_node=$DEVICE_TOTAL $SCRIPT "$@"
