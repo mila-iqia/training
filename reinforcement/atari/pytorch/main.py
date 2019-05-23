@@ -178,22 +178,6 @@ if args.recurrent_policy:
 
 num_updates = int(args.num_env_steps) // args.num_steps // args.num_processes
 
-try:
-    os.makedirs(args.log_dir)
-except OSError:
-    files = glob.glob(os.path.join(args.log_dir, '*.monitor.csv'))
-    for f in files:
-        os.remove(f)
-
-eval_log_dir = args.log_dir + "_eval"
-
-try:
-    os.makedirs(eval_log_dir)
-except OSError:
-    files = glob.glob(os.path.join(eval_log_dir, '*.monitor.csv'))
-    for f in files:
-        os.remove(f)
-
 
 def main():
     chrono = exp.chrono()
