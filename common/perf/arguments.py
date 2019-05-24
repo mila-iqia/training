@@ -62,7 +62,8 @@ not_parameter = {
     'dataset_dir',
     'backend',
     'jr_id',
-    'vcd'
+    'vcd',
+    'backend'
 }
 
 

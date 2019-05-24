@@ -1,11 +1,11 @@
 git+git://github.com/Delaunay/apex@master#egg=apex
 git+git://github.com/Delaunay/pytorch-a2c-ppo-acktr@master#egg=a2c_ppo_acktr
 git+git://github.com/Delaunay/benchutils@master#egg=benchutils
+git+git://github.com/Delaunay/baselines.git
 absl-py==0.7.1
 astor==0.7.1
 atari-py==0.1.7
 attrs==19.1.0
-baselines==0.1.5
 certifi==2019.3.9
 cffi==1.12.2
 chardet==3.0.4

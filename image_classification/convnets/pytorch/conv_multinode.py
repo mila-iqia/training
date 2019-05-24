@@ -17,20 +17,13 @@ parser.add_argument('data', metavar='DIR', help='path to dataset')
 parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet18')
 parser.add_argument('--lr', '--learning-rate', default=0.1, type=float, metavar='LR')
 parser.add_argument('--opt-level', type=str)
-parser.add_argument('--device_ids', type=int, nargs='*', default=None)
-
+parser.add_argument("--local_rank", default=0, type=int)
+parser.add_argument("--world-size", default=None, type=int)
+parser.add_argument("--backend", default='gloo', type=str)
 
 # ----
 exp = Experiment(__file__)
 args = exp.get_arguments(parser, show=True)
-node_size = torch.cuda.device_count()
-
-if args.device_ids is not None:
-   args.device_ids = list(map(lambda x: int(x), args.device_ids.split(',')))
-   node_size = len(args.device_ids)
-
-# Batch size it per GPU
-args.batch_size = args.batch_size * node_size
 device = exp.get_device()
 chrono = exp.chrono()
 try:
@@ -39,6 +32,28 @@ try:
 except:
     pass
 
+
+# ---
+def printf(*vargs, **kwargs):
+    if args.local_rank == 0:
+        print(*vargs, **kwargs)
+
+
+if args.world_size is None:
+    args.world_size = torch.cuda.device_count()
+
+printf('> Init Distributed')
+torch.distributed.init_process_group(
+    backend=args.backend,
+    init_method='env://',
+    world_size=args.world_size,
+    rank=args.local_rank
+)
+printf(os.environ['MASTER_ADDR'], os.environ['MASTER_PORT'])
+world_size = torch.distributed.get_world_size()
+os.environ['WORLD_SIZE'] = str(world_size)
+device = torch.cuda.device(args.local_rank)
+printf('< Init Distributed')
 
 # ----
 model = models.__dict__[args.arch]()
@@ -62,8 +77,7 @@ model, optimizer = amp.initialize(
     loss_scale="dynamic",
     opt_level=args.opt_level
 )
-model = nn.DataParallel(model, device_ids=args.device_ids)
-
+model = nn.DataParallel(model)
 
 # ----
 train_dataset = datasets.ImageFolder(
@@ -80,12 +94,14 @@ train_dataset = datasets.ImageFolder(
 )
 
 # ----
+sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
 train_loader = torch.utils.data.DataLoader(
     train_dataset,
     batch_size=args.batch_size,
     shuffle=False,
     num_workers=args.workers,
-    pin_memory=True
+    pin_memory=True,
+    sampler=sampler
 )
 
 # dataset is reduced but should be big enough for benchmark!
@@ -100,8 +116,21 @@ def next_batch():
         batch_iter = iter(train_loader)
         return next(batch_iter)
 
+
+def reduce_tensor(tensor):
+    rt = tensor.clone()
+    # if nccl API is not avaible we cannot to the reduce on GPU
+    if not torch.distributed.is_nccl_available():
+        rt = rt.cpu()
+
+    distributed.all_reduce(rt, op=distributed.ReduceOp.SUM)
+    rt /= world_size
+    return rt.cuda()
+
+
 model.train()
 for epoch in range(args.repeat):
+    sampler.set_epoch(epoch)
 
     with chrono.time('train') as t:
         for id in range(args.number):
@@ -117,8 +146,10 @@ for epoch in range(args.repeat):
             with chrono.time('compute'):
                 output = model(input)
                 loss = criterion(output, target)
+                loss = reduce_tensor(loss)
 
-                exp.log_batch_loss(loss.item())
+                if args.local_rank == 0:
+                    exp.log_batch_loss(loss.item())
 
                 # compute gradient and do SGD step
                 optimizer.zero_grad()
@@ -128,8 +159,10 @@ for epoch in range(args.repeat):
 
                 optimizer.step()
 
-    exp.show_eta(epoch, t)
+    if args.local_rank == 0:
+        exp.show_eta(epoch, t)
 
-# each GPU did the same batch size
-exp.report()
-
+if args.local_rank == 0:
+    # each GPU did the same batch size
+    args.batch_size *= world_size
+    exp.report()
