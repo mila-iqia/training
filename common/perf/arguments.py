@@ -157,7 +157,7 @@ class Experiment:
 
     def get_arguments(self, parser, *args, **kwargs):
         self.args = get_arguments(parser, *args, **kwargs)
-        self._chrono = MultiStageChrono(name=self.cmd, skip_obs=self.skip_obs, sync=get_sync(self.args))
+        self._chrono = MultiStageChrono(name=self.name, skip_obs=self.skip_obs, sync=get_sync(self.args))
 
         return self.args
 
