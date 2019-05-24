@@ -134,7 +134,8 @@ class Experiment:
     """
 
     def __init__(self, module, skip_obs=10):
-        self.name, self.version = get_experience_descriptor(module)
+        self.cmd, self.version = get_experience_descriptor(module)
+        self.name = os.environ.get('BENCH_NAME', self.cmd)
         self._chrono = None
         self.skip_obs = skip_obs
         self.args = None
@@ -147,7 +148,7 @@ class Experiment:
         try:
             self.remote_logger = CMLExperiment(
                 api_key=os.environ.get("CML_API_KEY"),
-                project_name=self.name,
+                project_name=self.cmd,
                 workspace=os.environ.get("CML_WORKSPACE")
             )
         except Exception as e:
@@ -156,7 +157,7 @@ class Experiment:
 
     def get_arguments(self, parser, *args, **kwargs):
         self.args = get_arguments(parser, *args, **kwargs)
-        self._chrono = MultiStageChrono(name=self.name, skip_obs=self.skip_obs, sync=get_sync(self.args))
+        self._chrono = MultiStageChrono(name=self.cmd, skip_obs=self.skip_obs, sync=get_sync(self.args))
 
         return self.args
 

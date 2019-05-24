@@ -68,9 +68,10 @@ def make_configs(args, current=''):
     return make_configs(copy.deepcopy(args), current=f'{current} {name} {values}')
 
 
-def run_job(cmd, config, group):
+def run_job(cmd, config, group, name):
     """ Run a model on each GPUs """
     env['CGROUP'] = group
+    env['BENCH_NAME'] = name
 
     if device_count <= 1 or group == cgroups['all']:
         env['JOB_ID'] = '0'
@@ -125,7 +126,7 @@ def run_job_def(definition, name=None):
         try:
             group = cgroups[definition.get('cgroup', 'all')]
 
-            run_job(cmd, config, group)
+            run_job(cmd, config, group, definition['name'])
 
             msg = f'{cmd} {(time.time() - s) / 60:8.2f} min passed\n'
 
