@@ -74,6 +74,7 @@ def run_job(cmd, config, group):
 
     if device_count <= 1 or group == cgroups['all']:
         env['JOB_ID'] = '0'
+        env['CUDA_VISIBLE_DEVICES'] = ','.join(range(device_count))
         subprocess.check_call(f"{cmd} {config}", shell=True, env=env)
         return
 
