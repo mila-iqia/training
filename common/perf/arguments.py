@@ -60,7 +60,9 @@ not_parameter = {
     'data',
     'no_cuda',
     'dataset_dir',
-    'backend'
+    'backend',
+    'jr_id',
+    'vcd'
 }
 
 
