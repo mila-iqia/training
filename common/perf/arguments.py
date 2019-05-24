@@ -63,7 +63,9 @@ not_parameter = {
     'backend',
     'jr_id',
     'vcd',
-    'backend'
+    'backend',
+    'num-processes',
+    'num-steps'
 }
 
 
