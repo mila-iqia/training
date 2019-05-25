@@ -13,3 +13,7 @@ mpi-default-dev
 libsm6
 libxext6
 libxrender1
+libffi-dev
+libhdf5-dev
+gfortran
+cmake

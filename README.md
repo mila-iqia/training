@@ -13,10 +13,9 @@ sudo apt install $(cat apt-packages)
 ./cgroup_setup.sh
 
 # install dependencies
-pip install --no-deps -r  requirements.txt
-cd common
-python setup.py install
-cd ..
+pip install Cython
+pip install --no-deps -r requirements.txt
+pip install -e common
 
 # install pytorch
 ...
