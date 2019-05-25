@@ -17,7 +17,7 @@ parser.add_argument('data', metavar='DIR', help='path to dataset')
 parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet18')
 parser.add_argument('--lr', '--learning-rate', default=0.1, type=float, metavar='LR')
 parser.add_argument('--opt-level', type=str)
-parser.add_argument('--device_ids', type=int, nargs='*', default=None)
+parser.add_argument('--device_ids', type=str, default=None)
 
 
 # ----
