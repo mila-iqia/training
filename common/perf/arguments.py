@@ -60,7 +60,12 @@ not_parameter = {
     'data',
     'no_cuda',
     'dataset_dir',
-    'backend'
+    'backend',
+    'jr_id',
+    'vcd',
+    'backend',
+    'num-processes',
+    'num-steps'
 }
 
 
@@ -129,7 +134,8 @@ class Experiment:
     """
 
     def __init__(self, module, skip_obs=10):
-        self.name, self.version = get_experience_descriptor(module)
+        self.cmd, self.version = get_experience_descriptor(module)
+        self.name = os.environ.get('BENCH_NAME', self.cmd)
         self._chrono = None
         self.skip_obs = skip_obs
         self.args = None
@@ -142,7 +148,7 @@ class Experiment:
         try:
             self.remote_logger = CMLExperiment(
                 api_key=os.environ.get("CML_API_KEY"),
-                project_name=self.name,
+                project_name=self.cmd,
                 workspace=os.environ.get("CML_WORKSPACE")
             )
         except Exception as e:

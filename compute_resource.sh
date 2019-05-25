@@ -8,7 +8,14 @@ export RAM_TOTAL=$(cat /proc/meminfo | head -n 1 | grep -oP '[0-9]*')
 export USE_CUDA=$(python -c "import torch; print(int(torch.cuda.is_available()))")
 # ---------------
 
-if [[ DEVICE_TOTAL == 0 ]]; then
+
+export ALT_CPU=$(cat /proc/cpuinfo | grep processor | wc -l)
+if [[ $CPU_TOTAL -eq 1 ]]; then
+    export CPU_TOTAL=$ALT_CPU
+fi
+
+
+if [[ $DEVICE_TOTAL != 0 ]]; then
     export RAM_CONSTRAINT=$(($RAM_TOTAL / $DEVICE_TOTAL))
     export CPU_COUNT=$(($CPU_TOTAL / $DEVICE_TOTAL))
 else

@@ -139,10 +139,16 @@
       "--repeat": 30,
       "--number": 10,
       "--env-name": "\"PongNoFrameskip-v4\"",
-      "--num-steps": 32,
-      "--num-processes": 16,
+      "--num-steps": 128,
+      "--num-processes": 8,
       "--algo": "ppo",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--use-gae": "",
+      "--clip-param": 0.1,
+      "--value-loss-coef": 0.5,
+      "--num-mini-batch": 4,
+      "--use-linear-lr-decay": "",
+      "--entropy-coef": 0.01,
       "--cuda": ""
     },
     "cgroup": "student"

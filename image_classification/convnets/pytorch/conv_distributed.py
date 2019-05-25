@@ -17,7 +17,8 @@ parser.add_argument('data', metavar='DIR', help='path to dataset')
 parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet18')
 parser.add_argument('--lr', '--learning-rate', default=0.1, type=float, metavar='LR')
 parser.add_argument('--opt-level', type=str)
-parser.add_argument('--device_ids', type=int, nargs='*', default=None)
+parser.add_argument('--device_ids', type=str, default=None)
+
 
 # ----
 exp = Experiment(__file__)
@@ -37,6 +38,7 @@ try:
     cudnn.benchmark = True
 except:
     pass
+
 
 # ----
 model = models.__dict__[args.arch]()
@@ -61,6 +63,7 @@ model, optimizer = amp.initialize(
     opt_level=args.opt_level
 )
 model = nn.DataParallel(model, device_ids=args.device_ids)
+
 
 # ----
 train_dataset = datasets.ImageFolder(
@@ -96,7 +99,6 @@ def next_batch():
     except StopIteration:
         batch_iter = iter(train_loader)
         return next(batch_iter)
-
 
 model.train()
 for epoch in range(args.repeat):
