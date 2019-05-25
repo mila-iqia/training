@@ -4,14 +4,17 @@ SCRIPT_PATH=$(dirname "$0")
 source $SCRIPT_PATH/compute_resource.sh
 
 # Get the number of numa Nodes
-NODES=$(ls -d /sys/devices/system/node/node* | wc -l)
-if [[ $NODES == 1 ]]; then
-    MEM_CONSTRAINT=0
-else
-    MEM_CONSTRAINT=0-$(($NODES - 1))
-fi
-# -----------------------------
+NODE_COUNT=$(ls -d /sys/devices/system/node/node* | wc -l)
+MEM_CONSTRAINT=$(ls -d  /sys/devices/system/node/node* | grep -Po '[0-9].*' | awk '{print $1}' | paste -s -d, -)
 
+#if [[ $NODES == 1 ]]; then
+#    MEM_CONSTRAINT=0
+#else
+#    MEM_CONSTRAINT=0-$(($NODES - 1))
+#fi
+
+# -----------------------------
+echo $CPU_COUNT
 CPU_CONSTRAINT="0-$(($CPU_COUNT - 1))"
 
 
