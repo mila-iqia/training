@@ -88,8 +88,8 @@ def run_job(cmd, config, group, name):
     for i in range(device_count):
         env['CGROUP'] = f'{group}{i}'
 
-        cmd = f"{cmd} --seed {i}"
-        processes.append(subprocess.Popen(f'JOB_ID={i} CUDA_VISIBLE_DEVICES={i} {cmd}', env=env, shell=True))
+        exec_cmd = f"{cmd} --seed {i}"
+        processes.append(subprocess.Popen(f'JOB_ID={i} CUDA_VISIBLE_DEVICES={i} {exec_cmd}', env=env, shell=True))
 
     exceptions = []
     for process in processes:

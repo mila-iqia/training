@@ -65,7 +65,8 @@ not_parameter = {
     'vcd',
     'backend',
     'num-processes',
-    'num-steps'
+    'num-steps',
+    'seed'
 }
 
 
