@@ -76,7 +76,7 @@ def run_job(cmd, config, group, name):
     if device_count <= 1 or group == cgroups['all']:
         env['JOB_ID'] = '0'
         env['CUDA_VISIBLE_DEVICES'] = ','.join([str(i) for i in range(device_count)])
-        subprocess.check_call(f"{cmd} {config}", shell=True, env=env)
+        subprocess.check_call(f"{cmd} {config} --seed {device_count}", shell=True, env=env)
         return
 
     cmd = f"{cmd} {config}"
@@ -87,6 +87,8 @@ def run_job(cmd, config, group, name):
     # use all those GPU
     for i in range(device_count):
         env['CGROUP'] = f'{group}{i}'
+
+        cmd = f"{cmd} --seed {i}"
         processes.append(subprocess.Popen(f'JOB_ID={i} CUDA_VISIBLE_DEVICES={i} {cmd}', env=env, shell=True))
 
     exceptions = []
