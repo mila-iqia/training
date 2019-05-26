@@ -74,6 +74,11 @@ You can run individual test using the command below
    
 * Since the tests run for approximately 9h you can check the result of each step by doing `cat $OUTPUT_DIRECTORY/summary.txt`
 
+
+* Stop a run that is in progress ?
+    * `kill -9 $(ps | grep run | awk '{print $1}' | paste -s -d ' ')`
+    * `kill -9 $(ps | grep python | awk '{print $1}' | paste -s -d ' ')`
+
 # Features
 
 * End to End - No details; faster wins
