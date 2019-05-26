@@ -16,6 +16,8 @@ if [[ ! -f /sys/fs//cgroup/memory/student0/memory.limit_in_bytes ]]; then
     # so we can run cgcreate as user and not sudo later on
     sudo chmod 777 -R /sys/fs/cgroup/*
 
+    # make sysctl executable by user :)
+    sudo chmod u+s /sbin/sysctl
 
     # all group has no constraint
     cgdelete memory:all 2> /dev/null
