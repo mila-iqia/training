@@ -86,6 +86,7 @@ def run_job(cmd, config, group, name):
     processes = []
     # use all those GPU
     for i in range(device_count):
+        env['CGROUP'] = f'{group}{i}'
         processes.append(subprocess.Popen(f'JOB_ID={i} CUDA_VISIBLE_DEVICES={i} {cmd}', env=env, shell=True))
 
     exceptions = []
@@ -170,3 +171,4 @@ if __name__ == '__main__':
         show()
     else:
         run_job_file(opt.name)
+

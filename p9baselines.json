@@ -40,7 +40,7 @@
     "cmd": "./image_loading/loader/pytorch/run.sh",
     "args":{
       "--data": "$DATA_DIRECTORY/ImageNet/train",
-      "--workers": 8,
+      "--workers": 16,
       "--repeat": 30,
       "--number": 5,
       "--batch-size": [32, 64, 128, 256],
