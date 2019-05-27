@@ -78,6 +78,43 @@ You can run individual test using the command below
 * Stop a run that is in progress ?
     * `kill -9 $(ps | grep run | awk '{print $1}' | paste -s -d ' ')`
     * `kill -9 $(ps | grep python | awk '{print $1}' | paste -s -d ' ')`
+    
+* You can check overall status by looking at `cat output/summary.txt `
+
+
+    ./regression/polynome/pytorch/run.sh     0.45 min passed
+    ./time_sequence_prediction/lstm/pytorch/run.sh     1.85 min passed
+    ./time_sequence_prediction/lstm/pytorch/run.sh     1.81 min passed
+    ./time_sequence_prediction/lstm/pytorch/run.sh     1.79 min passed
+    ./variational_auto_encoder/auto_encoding_variational_bayes/pytorch/run.sh     1.12 min passed
+    ./image_loading/loader/pytorch/run.sh     0.60 min passed
+    ./image_loading/loader/pytorch/run.sh     0.99 min passed
+    ./image_loading/loader/pytorch/run.sh     1.73 min passed
+    ./image_loading/loader/pytorch/run.sh     3.21 min passed
+    ./super_resolution/subpixel_convolution/pytorch/run.sh     4.20 min passed
+    ./natural_language_processing/rnn_translator/pytorch/run.sh     4.69 min passed
+    ./natural_language_processing/word_language_model/pytorch/run.sh     2.14 min passed
+    ./natural_language_processing/word_language_model/pytorch/run.sh     2.15 min passed
+    ./natural_language_processing/word_language_model/pytorch/run.sh     2.30 min passed
+    ./natural_language_processing/word_language_model/pytorch/run.sh     2.14 min passed
+    ./natural_language_processing/word_language_model/pytorch/run_fp16.sh     1.71 min passed
+    ./natural_language_processing/word_language_model/pytorch/run_fp16.sh     1.73 min passed
+    ./natural_language_processing/word_language_model/pytorch/run_fp16.sh     1.72 min passed
+    ./natural_language_processing/word_language_model/pytorch/run_fp16.sh     1.79 min passed
+    ./reinforcement/cart_pole/pytorch/run.sh     1.97 min passed
+    ./reinforcement/atari/pytorch/run.sh     6.46 min passed
+    ./object_detection/single_stage_detector/pytorch/run.sh    16.76 min passed
+    ./object_detection/single_stage_detector/pytorch/run.sh     9.80 min passed
+    ./fast_neural_style/neural_style/pytorch/run.sh     4.55 min passed
+    ./generative_adversarial_networks/dcgan/pytorch/run.sh     4.72 min passed
+    ./image_classification/convnets/pytorch/run.sh     1.17 min passed
+    ./image_classification/convnets/pytorch/run.sh     0.96 min passed
+    ./recommendation/neural_collaborative_filtering/pytorch/run.sh    13.08 min passed
+    ./image_classification/convnets/pytorch/run_distributed.sh     1.69 min passed
+    ./image_classification/convnets/pytorch/run_distributed.sh     2.34 min passed
+    ./generative_adversarial_networks/dcgan/pytorch/run.sh     3.91 min passed
+    Total Time  6332.38 s
+
 
 # Features
 
