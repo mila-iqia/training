@@ -6,7 +6,7 @@ import time
 import json
 import copy
 import shlex
-
+import traceback
 import multiprocessing
 import torch
 import argparse
@@ -68,13 +68,15 @@ def make_configs(args, current=''):
     return make_configs(copy.deepcopy(args), current=f'{current} {name} {values}')
 
 
-def run_job(cmd, config, group):
+def run_job(cmd, config, group, name):
     """ Run a model on each GPUs """
     env['CGROUP'] = group
+    env['BENCH_NAME'] = name
 
     if device_count <= 1 or group == cgroups['all']:
         env['JOB_ID'] = '0'
-        subprocess.check_call(f"{cmd} {config}", shell=True, env=env)
+        env['CUDA_VISIBLE_DEVICES'] = ','.join([str(i) for i in range(device_count)])
+        subprocess.check_call(f"{cmd} {config} --seed {device_count}", shell=True, env=env)
         return
 
     cmd = f"{cmd} {config}"
@@ -84,7 +86,10 @@ def run_job(cmd, config, group):
     processes = []
     # use all those GPU
     for i in range(device_count):
-        processes.append(subprocess.Popen(f'JOB_ID={i} CUDA_VISIBLE_DEVICES={i} {cmd}', env=env, shell=True))
+        env['CGROUP'] = f'{group}{i}'
+
+        exec_cmd = f"{cmd} --seed {i}"
+        processes.append(subprocess.Popen(f'JOB_ID={i} CUDA_VISIBLE_DEVICES={i} {exec_cmd}', env=env, shell=True))
 
     exceptions = []
     for process in processes:
@@ -124,7 +129,7 @@ def run_job_def(definition, name=None):
         try:
             group = cgroups[definition.get('cgroup', 'all')]
 
-            run_job(cmd, config, group)
+            run_job(cmd, config, group, definition['name'])
 
             msg = f'{cmd} {(time.time() - s) / 60:8.2f} min passed\n'
 
@@ -140,7 +145,7 @@ def run_job_def(definition, name=None):
                 msg = f'{cmd} {(time.time() - s) / 60:8.2f} s partial failed {failed}/{total}\n'
 
         except Exception as e:
-            print(' ' * 4 * 3, e)
+            traceback.print_exc()
             print(' ' * 4 * 3, cmd)
             msg = f'{cmd} {(time.time() - s) / 60:8.2f} s failed\n'
 
@@ -168,3 +173,4 @@ if __name__ == '__main__':
         show()
     else:
         run_job_file(opt.name)
+

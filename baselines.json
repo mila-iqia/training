@@ -59,7 +59,6 @@
       "--repeat": 50,
       "--number": 20,
       "--workers": 8,
-      "--seed": 0,
       "--lr": 0.1,
       "--no-checks": "",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
@@ -75,7 +74,6 @@
       "--number": 10,
       "--batch-size": 64,
       "--dataset-dir": "$DATA_DIRECTORY/wmt16",
-      "--seed": 0,
       "--target-bleu": 21.80,
       "--epochs": 8,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
@@ -125,7 +123,6 @@
       "--repeat": 200,
       "--number": 1000,
       "--gamma": 0.99,
-      "--seed": 0,
       "--log-interval": 10,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--no-cuda": ""
@@ -160,7 +157,6 @@
       "--repeat": 30,
       "--number": 10,
       "--batch-size": 128,
-      "--seed": 0,
       "--no-save": "",
       "--workers": 8,
       "--data": "${DATA_DIRECTORY}/coco",
@@ -177,7 +173,6 @@
       "--repeat": 30,
       "--number": 10,
       "--batch-size": 64,
-      "--seed": 0,
       "--no-save": "",
       "--workers": 8,
       "--data": "${DATA_DIRECTORY}/coco",
@@ -255,7 +250,6 @@
       "-l": 0.0005,
       "--layers": "256 256 128 64",
       "-f" : 64,
-      "--seed": 1,
       "--threshold": 0.635,
       "--processes": 1,
       "--workers": 8,
@@ -265,7 +259,7 @@
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": ""
     },
-    "cgroup": "all"
+    "cgroup": "student"
   },
   {
     "name": "convnet_distributed",
