@@ -68,7 +68,7 @@ You can run individual test using the command below
     
 * You can check overall status by looking at `cat output/summary.txt `
 
-
+```
     ./regression/polynome/pytorch/run.sh     0.45 min passed
     ./time_sequence_prediction/lstm/pytorch/run.sh     1.79 min passed
     ./variational_auto_encoder/auto_encoding_variational_bayes/pytorch/run.sh     1.12 min passed
@@ -90,7 +90,7 @@ You can run individual test using the command below
     ./image_classification/convnets/pytorch/run_distributed.sh     2.34 min passed
     ./generative_adversarial_networks/dcgan/pytorch/run.sh     3.91 min passed
     Total Time  6332.38 s
-
+```
 
 
 # Features
