@@ -17,7 +17,7 @@
     "args":{
       "--repeat": 20,
       "--number": 5,
-      "--dtype": ["float16", "float32", "float64"],
+      "--dtype":  "float32",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": ""
     },
@@ -43,7 +43,7 @@
       "--workers": 8,
       "--repeat": 30,
       "--number": 5,
-      "--batch-size": [32, 64, 128, 256],
+      "--batch-size": 256,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": ""
     },
@@ -92,7 +92,7 @@
       "--nhid": 656,
       "--dropout": 0.5,
       "--epochs": 5,
-      "--model": ["LSTM", "RNN_TANH", "RNN_RELU", "GRU"],
+      "--model": "GRU",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": ""
     },
@@ -109,7 +109,7 @@
       "--nhid": 656,
       "--dropout": 0.5,
       "--epochs": 5,
-      "--model": ["LSTM", "RNN_TANH", "RNN_RELU", "GRU"],
+      "--model": "GRU",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": "",
       "--fp16": ""
@@ -149,22 +149,6 @@
       "--cuda": ""
     },
     "cgroup": "student"
-  },
-  {
-    "name": "ssd",
-    "cmd": "./object_detection/single_stage_detector/pytorch/run.sh",
-    "args":{
-      "--repeat": 30,
-      "--number": 10,
-      "--batch-size": 128,
-      "--no-save": "",
-      "--workers": 8,
-      "--data": "${DATA_DIRECTORY}/coco",
-      "--threshold": 0.212,
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
-      "--cuda": ""
-    },
-    "cgroup": "all"
   },
   {
     "name": "ssd",
