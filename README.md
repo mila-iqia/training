@@ -21,7 +21,7 @@ pip install -e common
 ...
 
 # This will run the baselines bench
-#  ~ 4-9h depending on hardware
+#  ~ 2-4h depending on hardware
 
 export BASE=/home/mila/mlperf
 ./run.sh [--jobs baselines.json]
@@ -42,13 +42,12 @@ git push
 cd $BASE/output/
 zip results
 send results.zip
-
 ```
 
 You can run individual test using the command below
 
 ```bash 
-./run.sh -jobs baselines.json --name vae
+./run.sh --jobs baselines.json --name vae
 ```
 
 * the benchmark starts with two toy examples to make sure everything is setup properly
@@ -59,20 +58,8 @@ You can run individual test using the command below
 * Some tasks are allowed to use the machine entirely (`convnet_all`, `dcgan_all`)
 
 * When installing pytorch you have to make sure that it is compiled with LAPACK (for the QR decomposition)
-
-* We leave it as an option to provide tweaked numbers as well. 
-    * Obviously not all tweaks are equals, 
-    you can find below a list from the most desirable kind of tweaks to the least desirable. 
-    NB: Some models have configurable hidden layers, obviously modifying those values are not valid optimizations
-    NB2: Not all models are worth optimizing
-    NB3: Not all configuration will work but at least one should
-    NB4: Some code change might be required for specific vendor 
-    
-        1. argument change (batch size, worker/process count, etc..) (no code change)
-        2. environment i.e execution in an optimized container (no code change)
-        3. code tweak
    
-* Since the tests run for approximately 9h you can check the result of each step by doing `cat $OUTPUT_DIRECTORY/summary.txt`
+* Since the tests run for approximately 3h you can check the result of each step by doing `cat $OUTPUT_DIRECTORY/summary.txt`
 
 
 * Stop a run that is in progress ?
@@ -83,23 +70,12 @@ You can run individual test using the command below
 
 
     ./regression/polynome/pytorch/run.sh     0.45 min passed
-    ./time_sequence_prediction/lstm/pytorch/run.sh     1.85 min passed
-    ./time_sequence_prediction/lstm/pytorch/run.sh     1.81 min passed
     ./time_sequence_prediction/lstm/pytorch/run.sh     1.79 min passed
     ./variational_auto_encoder/auto_encoding_variational_bayes/pytorch/run.sh     1.12 min passed
-    ./image_loading/loader/pytorch/run.sh     0.60 min passed
-    ./image_loading/loader/pytorch/run.sh     0.99 min passed
-    ./image_loading/loader/pytorch/run.sh     1.73 min passed
     ./image_loading/loader/pytorch/run.sh     3.21 min passed
     ./super_resolution/subpixel_convolution/pytorch/run.sh     4.20 min passed
     ./natural_language_processing/rnn_translator/pytorch/run.sh     4.69 min passed
     ./natural_language_processing/word_language_model/pytorch/run.sh     2.14 min passed
-    ./natural_language_processing/word_language_model/pytorch/run.sh     2.15 min passed
-    ./natural_language_processing/word_language_model/pytorch/run.sh     2.30 min passed
-    ./natural_language_processing/word_language_model/pytorch/run.sh     2.14 min passed
-    ./natural_language_processing/word_language_model/pytorch/run_fp16.sh     1.71 min passed
-    ./natural_language_processing/word_language_model/pytorch/run_fp16.sh     1.73 min passed
-    ./natural_language_processing/word_language_model/pytorch/run_fp16.sh     1.72 min passed
     ./natural_language_processing/word_language_model/pytorch/run_fp16.sh     1.79 min passed
     ./reinforcement/cart_pole/pytorch/run.sh     1.97 min passed
     ./reinforcement/atari/pytorch/run.sh     6.46 min passed
@@ -114,6 +90,7 @@ You can run individual test using the command below
     ./image_classification/convnets/pytorch/run_distributed.sh     2.34 min passed
     ./generative_adversarial_networks/dcgan/pytorch/run.sh     3.91 min passed
     Total Time  6332.38 s
+
 
 
 # Features
@@ -217,55 +194,6 @@ Report output sample
 
  image/sec = 128/(14.0371/5)
  image/sec = 45.59
-```
-
-
-# Options
-
-FAKE_DATASET: generate a pseudo dataset instead of downloading the original
-USE_VALIDATION: use validation set to train (do not download the training dataset)
-    
-# Test Breakdown
-
-# Singularity
-
-## Make the Singularity Image
-
-```bash
- sudo singularity build --sandbox vendor_img/ vendor.sif
- sudo singularity shell --writable vendor_img
- mkdir /mila
- chmod 777 /mila
- cd /mila
- cat requirements.txt | xargs pip install
- cd common 
- python setup.py install
-```
-
-## Use the image
-
-```bash
-singularity shell -B /storage/:/data/ vendor_img
-cd /mila
-./run.sh
-```
-
-
-# Submitting Tuned Results
-
-We allow tuning on the vendor'side.
-
-
-1. Make sure FS cache is empty
-    * To ease up the benchmark process we only run on a reduce dataset which means that most if not all the dataset fit
-    in RAM. This is not something that we want to measure as it will skew the process.
-    You should make sure that the caches are clean before running the test.
-    When validating your results we will
-    
-```bash
-    sh -c 'echo 1 > /proc/sys/vm/drop_caches'
-    sh -c 'echo 2 > /proc/sys/vm/drop_caches'
-    sh -c 'echo 3 > /proc/sys/vm/drop_caches'
 ```
 
 # Example
