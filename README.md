@@ -3,10 +3,30 @@ Training Benchmarks
 
 # How to run it
 
+## Singularity
+
+```bash
+git clone https://github.com/Delaunay/training.git
+cd training
+git checkout -b vendor
+
+# Generate the Singularity files
+cd signularity
+python generate_container.py
+singularity build rocm.simg Singularity.rocm
+cd ..
+
+# Run the benchmarks
+export BASE=~/location
+./run.sh --singularity rocm.simg [--jobs baselines.json]
+```
+
+## Bare bone
+
 ```bash
 git clone ....
 cd training
-git checkout vendor
+git checkout -b vendor
 
 sudo apt install $(cat apt-packages)
 
@@ -25,24 +45,9 @@ pip install -e common
 
 export BASE=/home/mila/mlperf
 ./run.sh [--jobs baselines.json]
-cp $BASE/output/baselines*.json $BASE/output/results/
-
-# Tweak the bench for better perf
-cp baselines.json vendor.json
-vi vendor.json
-
-./run.sh --jobs vendor.json
-cp $BASE/output/vendor*.json $BASE/output/results/
-
-# Push your change
-git add --all
-git commit -m "vendor tweaked"
-git push
-
-cd $BASE/output/
-zip results
-send results.zip
 ```
+
+## Details
 
 You can run individual test using the command below
 
@@ -66,7 +71,9 @@ You can run individual test using the command below
     * `kill -9 $(ps | grep run | awk '{print $1}' | paste -s -d ' ')`
     * `kill -9 $(ps | grep python | awk '{print $1}' | paste -s -d ' ')`
     
-* You can check overall status by looking at `cat output/summary.txt `
+* The outputs are located at `$BASE/output`.
+
+* You can check overall status by looking at `cat $BASE/output/summary.txt `
 
 ```
 ./regression/polynome/pytorch/run.sh     0.45 min passed

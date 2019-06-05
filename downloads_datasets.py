@@ -8,7 +8,8 @@ import argparse
 path = os.environ.get('OUTPUT_DIRECTORY', '/tmp')
 parser = argparse.ArgumentParser()
 parser.add_argument('--sequential', action='store_true', default=False)
-args = parser.parse_args()
+parser.add_argument('--singularity', type=str, default=None, help='singularity image to use')
+args, _ = parser.parse_known_args()
 
 
 def isdir(path):
@@ -27,6 +28,11 @@ experiment = open(f'{path}/download_summary.txt', 'a')
 
 start_all = time.time()
 
+# if singularity is used to run we also need to download with singularity
+exec_prefix = ''
+if args.singularity is not None:
+    exec_prefix = f'singularity exec {args.singularity}'
+
 # Task
 scripts = []
 
@@ -35,7 +41,7 @@ def run_script(download_script):
     s = time.time()
     try:
         subprocess.check_call([download_script], shell=True, env=os.environ)
-        experiment.write(f'{download_script} {time.time() - s} passed\n')
+        experiment.write(f'{exec_prefix} {download_script} {time.time() - s} passed\n')
 
     except Exception as e:
         print(' ' * 4 * 3, e)

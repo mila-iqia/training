@@ -22,3 +22,5 @@ singularity/rocm_img/
 Singularity.rocm
 Singularity.power9
 Singularity.nvidia
+*.simg
+
