@@ -9,9 +9,12 @@ cd $SCRIPT_PATH
 
 export CONFIGURED=1
 
+# export the base environment variable to singularity
+export SINGULARITYENV_BASE=$BASE
+
 ./cgroup_setup.sh
 
-./download_dataset.sh
+./download_datasets.sh "$@"
 
 python run.py "$@"
 

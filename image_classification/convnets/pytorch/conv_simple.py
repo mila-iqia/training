@@ -2,6 +2,7 @@ from perf import *
 
 import torch
 import torch.nn as nn
+from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
@@ -67,7 +68,7 @@ train_dataset = datasets.ImageFolder(
 )
 
 # ----
-train_loader = torch.utils.data.DataLoader(
+train_loader = DataLoader(
     train_dataset,
     batch_size=args.batch_size,
     shuffle=True,

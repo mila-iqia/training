@@ -48,7 +48,8 @@ if opt.outf is not None:
 
 device = exp.get_device()
 chrono = exp.chrono()
-
+# Data parallel cuts the batch size across gpus
+opt.batch_size = opt.batch_size * opt.ngpu
 cudnn.benchmark = True
 
 if torch.cuda.is_available() and not opt.cuda:
@@ -97,15 +98,17 @@ elif opt.dataset == 'fake':
     nc=3
 
 assert dataset
-dataloader = torch.utils.data.DataLoader(dataset, batch_size=opt.batch_size,
-                                         shuffle=True, num_workers=int(opt.workers))
+dataloader = torch.utils.data.DataLoader(
+    dataset,
+    batch_size=opt.batch_size,
+    shuffle=True,
+    num_workers=int(opt.workers)
+)
 
 ngpu = int(opt.ngpu)
 nz = int(opt.nz)
 ngf = int(opt.ngf)
 ndf = int(opt.ndf)
-
-print(device)
 
 
 # custom weights initialization called on netG and netD
@@ -157,7 +160,6 @@ netG = Generator(ngpu).to(device)
 netG.apply(weights_init)
 if opt.netG != '':
     netG.load_state_dict(torch.load(opt.netG))
-print(netG)
 
 
 class Discriminator(nn.Module):
@@ -198,7 +200,7 @@ netD = Discriminator(ngpu).to(device)
 netD.apply(weights_init)
 if opt.netD != '':
     netD.load_state_dict(torch.load(opt.netD))
-print(netD)
+
 
 criterion = nn.BCELoss()
 

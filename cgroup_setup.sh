@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 
-SCRIPT_PATH=$(dirname "$0")
-source $SCRIPT_PATH/compute_resource.sh
-
-# Get the number of numa Nodes
-NODE_COUNT=$(ls -d /sys/devices/system/node/node* | wc -l)
-MEM_CONSTRAINT=$(ls -d /sys/devices/system/node/node* | grep -Po '[0-9].*' | awk '{print $1}' | paste -s -d, -)
-
-# -----------------------------
-CPU_CONSTRAINT="0-$(($CPU_COUNT - 1))"
-
 if [[ ! -f /sys/fs//cgroup/memory/student0/memory.limit_in_bytes ]]; then
+    SCRIPT_PATH=$(dirname "$0")
+    source $SCRIPT_PATH/compute_resource.sh
+
+    # Get the number of numa Nodes
+    NODE_COUNT=$(ls -d /sys/devices/system/node/node* | wc -l)
+    MEM_CONSTRAINT=$(ls -d /sys/devices/system/node/node* | grep -Po '[0-9].*' | awk '{print $1}' | paste -s -d, -)
+
+    # -----------------------------
+    CPU_CONSTRAINT="0-$(($CPU_COUNT - 1))"
 
     # make users able to manage cgroup
     # so we can run cgcreate as user and not sudo later on
