@@ -14,7 +14,7 @@ export SINGULARITYENV_BASE=$BASE
 
 ./cgroup_setup.sh
 
-download_datasets.sh "$@"
+./download_datasets.sh "$@"
 
 python run.py "$@"
 

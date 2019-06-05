@@ -68,13 +68,9 @@ train_dataset = datasets.ImageFolder(
 )
 
 # ----
-if args.loader_batch_size is None:
-    args.loader_batch_size = args.batch_size
-
-
 train_loader = DataLoader(
     train_dataset,
-    batch_size=args.loader_batch_size,
+    batch_size=args.batch_size,
     shuffle=True,
     num_workers=args.workers,
     pin_memory=True
