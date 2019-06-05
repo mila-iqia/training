@@ -6,6 +6,8 @@ From: {base_img}
     apt-get -y update
     apt-get -y install {apt_packages}
 
+    pip install --user --upgrade setuptools
+
     pip install -e git+git://github.com/mila-iqia/training.git#egg=master\\&subdirectory=common
     pip install Cython
     pip install --no-deps {pip_packages}
@@ -18,6 +20,8 @@ FROM {base_img}
 
 RUN apt-get -y update
 RUN apt-get -y install {apt_packages}
+
+RUN pip install --upgrade setuptools
 
 RUN pip install -e git+git://github.com/mila-iqia/training.git#egg=master\\&subdirectory=common
 RUN pip install Cython
