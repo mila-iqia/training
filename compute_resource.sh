@@ -9,7 +9,6 @@ if [[ -z "${RESOURCE_COMPUTED}" ]]; then
     export USE_CUDA=$(python -c "import torch; print(int(torch.cuda.is_available()))")
     # ---------------
 
-
     export ALT_CPU=$(cat /proc/cpuinfo | grep processor | wc -l)
     if [[ $CPU_TOTAL -eq 1 ]]; then
         export CPU_TOTAL=$ALT_CPU
