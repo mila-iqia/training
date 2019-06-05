@@ -11,9 +11,6 @@ From: {base_img}
     pip install --no-deps {pip_packages}
 
     {more}
-
-%environment
-    export BASE=/data/
 """
 
 docker_base = """
@@ -27,8 +24,6 @@ RUN pip install Cython
 RUN pip install --no-deps {pip_packages}
 
 {more}
-
-ENV export BASE=/data/
 """
 
 generate_docker = False
