@@ -49,7 +49,7 @@ exec_prefix = []
 if not opt.no_cgexec:
     exec_prefix.append('cgexec -g $CGROUP')
 
-if not opt.no_nocahe:
+if not opt.no_nocache:
     exec_prefix.append('nocache')
 
 # I do not really know how singularity & nocache will interact
