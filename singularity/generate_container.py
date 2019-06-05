@@ -65,9 +65,9 @@ pip_packages_p9 = (open('../requirements_ppc.txt', 'r')
 # Remove all the reference to useless python versions
 # and make python3.6 the default
 more_rocm = ' && '.join([
-    'rm /usr/bin/python3'
-    'rm /usr/bin/python'
-    'ln -s /usr/bin/python3.6 /usr/bin/python'
+    'rm /usr/bin/python3',
+    'rm /usr/bin/python',
+    'ln -s /usr/bin/python3.6 /usr/bin/python',
     'ln -s /usr/bin/python3.6 /usr/bin/python3'
 ])
 
