@@ -73,7 +73,7 @@ more_rocm = ' && '.join([
 
 if generate_singularity:
     make_file(
-        'rocm_singularity.recipe',
+        'Singularity.rocm',
         singularity_base,
         'rocm/pytorch:rocm2.2_ubuntu16.04_py3.6_pytorch',
         apt_packages,
@@ -96,7 +96,7 @@ if generate_docker:
 
 if generate_singularity:
     make_file(
-        'power9_singularity.recipe',
+        'Singularity.power9',
         singularity_base,
         'ibmcom/powerai:1.5.4-all-ubuntu18.04-py3',
         apt_packages,
@@ -116,7 +116,7 @@ if generate_docker:
 # ---------------------------------------------------
 if generate_singularity:
     make_file(
-        'nvidia_singularity.recipe',
+        'Singularity.nvidia',
         singularity_base,
         'pytorch/pytorch:1.0.1-cuda10.0-cudnn7-runtime',
         apt_packages,
