@@ -69,27 +69,27 @@ You can run individual test using the command below
 * You can check overall status by looking at `cat output/summary.txt `
 
 ```
-    ./regression/polynome/pytorch/run.sh     0.45 min passed
-    ./time_sequence_prediction/lstm/pytorch/run.sh     1.79 min passed
-    ./variational_auto_encoder/auto_encoding_variational_bayes/pytorch/run.sh     1.12 min passed
-    ./image_loading/loader/pytorch/run.sh     3.21 min passed
-    ./super_resolution/subpixel_convolution/pytorch/run.sh     4.20 min passed
-    ./natural_language_processing/rnn_translator/pytorch/run.sh     4.69 min passed
-    ./natural_language_processing/word_language_model/pytorch/run.sh     2.14 min passed
-    ./natural_language_processing/word_language_model/pytorch/run_fp16.sh     1.79 min passed
-    ./reinforcement/cart_pole/pytorch/run.sh     1.97 min passed
-    ./reinforcement/atari/pytorch/run.sh     6.46 min passed
-    ./object_detection/single_stage_detector/pytorch/run.sh    16.76 min passed
-    ./object_detection/single_stage_detector/pytorch/run.sh     9.80 min passed
-    ./fast_neural_style/neural_style/pytorch/run.sh     4.55 min passed
-    ./generative_adversarial_networks/dcgan/pytorch/run.sh     4.72 min passed
-    ./image_classification/convnets/pytorch/run.sh     1.17 min passed
-    ./image_classification/convnets/pytorch/run.sh     0.96 min passed
-    ./recommendation/neural_collaborative_filtering/pytorch/run.sh    13.08 min passed
-    ./image_classification/convnets/pytorch/run_distributed.sh     1.69 min passed
-    ./image_classification/convnets/pytorch/run_distributed.sh     2.34 min passed
-    ./generative_adversarial_networks/dcgan/pytorch/run.sh     3.91 min passed
-    Total Time  6332.38 s
+./regression/polynome/pytorch/run.sh     0.45 min passed
+./time_sequence_prediction/lstm/pytorch/run.sh     1.79 min passed
+./variational_auto_encoder/auto_encoding_variational_bayes/pytorch/run.sh     1.12 min passed
+./image_loading/loader/pytorch/run.sh     3.21 min passed
+./super_resolution/subpixel_convolution/pytorch/run.sh     4.20 min passed
+./natural_language_processing/rnn_translator/pytorch/run.sh     4.69 min passed
+./natural_language_processing/word_language_model/pytorch/run.sh     2.14 min passed
+./natural_language_processing/word_language_model/pytorch/run_fp16.sh     1.79 min passed
+./reinforcement/cart_pole/pytorch/run.sh     1.97 min passed
+./reinforcement/atari/pytorch/run.sh     6.46 min passed
+./object_detection/single_stage_detector/pytorch/run.sh    16.76 min passed
+./object_detection/single_stage_detector/pytorch/run.sh     9.80 min passed
+./fast_neural_style/neural_style/pytorch/run.sh     4.55 min passed
+./generative_adversarial_networks/dcgan/pytorch/run.sh     4.72 min passed
+./image_classification/convnets/pytorch/run.sh     1.17 min passed
+./image_classification/convnets/pytorch/run.sh     0.96 min passed
+./recommendation/neural_collaborative_filtering/pytorch/run.sh    13.08 min passed
+./image_classification/convnets/pytorch/run_distributed.sh     1.69 min passed
+./image_classification/convnets/pytorch/run_distributed.sh     2.34 min passed
+./generative_adversarial_networks/dcgan/pytorch/run.sh     3.91 min passed
+Total Time  6332.38 s
 ```
 
 
@@ -233,7 +233,6 @@ Report output sample
     [ 12/ 15] | ETA:   0.24 min | Batch Loss   5.4052
     [ 13/ 15] | ETA:   0.12 min | Batch Loss   5.2305
     [ 14/ 15] | ETA:   0.00 min | Batch Loss   5.3205
-    3.275667142868042
     --------------------------------------------------------------------------------
     {
         "arch": "resnet18",
@@ -242,24 +241,7 @@ Report output sample
             7.034599304199219,
             6.076425075531006,
             6.385458946228027,
-            6.320394515991211,
-            5.8986897468566895,
-            6.044133186340332,
-            6.152379035949707,
-            5.988056182861328,
-            5.7566118240356445,
-            5.904807090759277,
-            5.3836259841918945,
-            5.549648284912109,
-            5.7246623039245605,
-            5.412194728851318,
-            5.146271228790283,
-            5.570966720581055,
-            5.238946437835693,
-            5.1303300857543945,
-            5.369985580444336,
-            5.195217132568359,
-            5.447091102600098,
+                ...
             5.21469783782959,
             5.447901725769043,
             5.630765914916992,
@@ -308,6 +290,8 @@ Report output sample
 
 
 ## Report example
+
+One report per GPU is generated.
 
 ```
 [{

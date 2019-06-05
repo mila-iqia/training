@@ -6,6 +6,7 @@ From: {base_img}
     apt-get -y update
     apt-get -y install {apt_packages}
 
+    pip install -e git+git://github.com/mila-iqia/training@master#egg=common&subdirectory=common
     pip install Cython
     pip install --no-deps {pip_packages}
 
@@ -21,6 +22,7 @@ FROM {base_img}
 RUN apt-get -y update
 RUN apt-get -y install {apt_packages}
 
+RUN pip install -e git+git://github.com/mila-iqia/training@master#egg=common&subdirectory=common
 RUN pip install Cython
 RUN pip install --no-deps {pip_packages}
 
