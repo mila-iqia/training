@@ -16,6 +16,7 @@ cd training
 git checkout -b vendor
 
 # Generate the Singularity files
+./install_singularity.sh
 cd signularity
 python generate_container.py
 singularity build rocm.simg Singularity.rocm
