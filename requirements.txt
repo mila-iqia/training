@@ -1,3 +1,4 @@
+git+git://github.com/mila-iqia/training@master#egg=common&subdirectory=repo
 git+git://github.com/Delaunay/apex@master#egg=apex
 git+git://github.com/Delaunay/pytorch-a2c-ppo-acktr@master#egg=a2c_ppo_acktr
 git+git://github.com/Delaunay/benchutils@master#egg=benchutils

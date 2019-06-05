@@ -19,6 +19,12 @@ parser.add_argument('--show', action='store_true', default=False)
 parser.add_argument('--verbose', action='store_true', default=False)
 parser.add_argument('--exclude', type=str, default='', help='name of the experience to exclude')
 
+parser.add_argument('--no-cgexec', action='store_true', help='do not execute inside a cgroup')
+parser.add_argument('--no-nocache', action='store_true', help='do not use nocache')
+
+parser.add_argument('--singularity', type=str, default=None, help='singularity image to use')
+
+
 cpu_count = multiprocessing.cpu_count()
 device_count = torch.cuda.device_count()
 path = os.environ.get('OUTPUT_DIRECTORY', '/tmp')
@@ -36,6 +42,19 @@ cgroups = {
     'student': 'cpuset,memory:student',
     'all': 'memory:all'
 }
+
+
+exec_prefix = []
+
+if not opt.no_cgexec:
+    exec_prefix.append('cgexec -g $CGROUP')
+
+if not opt.no_nocahe:
+    exec_prefix.append('nocache')
+
+# I do not really know how singularity & nocache will interact
+if opt.singularity is not None:
+    exec_prefix.append(f'singularity exec {opt.singularity}')
 
 
 class JobRunnerException(Exception):

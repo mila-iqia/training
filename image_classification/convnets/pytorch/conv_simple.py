@@ -2,6 +2,7 @@ from perf import *
 
 import torch
 import torch.nn as nn
+from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
@@ -15,6 +16,7 @@ parser.add_argument('data', metavar='DIR', help='path to dataset')
 parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet18')
 parser.add_argument('--lr', '--learning-rate', default=0.1, type=float, metavar='LR')
 parser.add_argument('--opt-level', type=str)
+parser.add_argument('--loader-batch-size', type=int, default=None)
 
 # ----
 exp = Experiment(__file__)
@@ -67,16 +69,68 @@ train_dataset = datasets.ImageFolder(
 )
 
 # ----
-train_loader = torch.utils.data.DataLoader(
+if args.loader_batch_size is None:
+    args.loader_batch_size = args.batch_size
+
+
+# Not really improving loading speed
+class BatchChunksIterator:
+    """ Pytorch dataloader works better with big batch sizes.
+        so we allow the user to specify a bigger batch size for the dataloader only.
+        but the input size will be smaller.
+
+        [In] < ./image_classification/convnets/pytorch/run.sh /Tmp/mlperf/data//data/ImageNet/train/ --repeat 20 --number 5 --workers 8 --arch resnet18 --cuda --opt-level O0 --batch-size 64 --loader-batch-size 64
+
+        [Out]>   "avg": 384.77666779370503 img/sec
+
+    """
+
+    def __init__(self, dataloader: DataLoader, batch_size_input,):
+        self.loader = iter(dataloader)
+        self.bs_loader = dataloader.batch_size
+        self.bs_input = batch_size_input
+        self.disabled = False
+
+        # The loader should have a bigger batch size for this to matter
+        if self.bs_loader <= self.bs_input:
+            self.disabled = True
+            print('/!\\ BatchChunkIterator is disabled')
+
+        self.bs_count = self.bs_loader // self.bs_input
+        assert self.bs_loader % self.bs_input == 0
+
+        self.current_input = None
+        self.current_target = None
+        self.i = self.bs_count
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.disabled:
+            return next(self.loader)
+
+        if self.i == self.bs_count:
+            self.i = 0
+            self.current_input, self.current_target = next(self.loader)
+
+        start = self.i * self.bs_input
+        end = start + self.bs_input
+        self.i += 1
+
+        return self.current_input[start:end, :], self.current_target[start:end]
+
+
+train_loader = DataLoader(
     train_dataset,
-    batch_size=args.batch_size,
+    batch_size=args.loader_batch_size,
     shuffle=True,
     num_workers=args.workers,
     pin_memory=True
 )
 
 # dataset is reduced but should be big enough for benchmark!
-batch_iter = iter(train_loader)
+batch_iter = BatchChunksIterator(train_loader, args.batch_size)
 
 
 def next_batch():
