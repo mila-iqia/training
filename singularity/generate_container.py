@@ -10,7 +10,7 @@ From: {base_img}
 
     pip install -e git+git://github.com/mila-iqia/training.git#egg=master\\&subdirectory=common
     pip install Cython
-    pip install --no-deps {pip_packages}
+{pip_packages}
 
     {more}
 """
@@ -25,13 +25,25 @@ RUN pip install --upgrade setuptools
 
 RUN pip install -e git+git://github.com/mila-iqia/training.git#egg=master\\&subdirectory=common
 RUN pip install Cython
-RUN pip install --no-deps {pip_packages}
+{pip_packages}
 
 {more}
 """
 
 generate_docker = False
 generate_singularity = True
+
+
+# we want to know exactly which packaged failed to install
+def make_pip_install(name, docker=False):
+    pip_packages = open(name, 'r').read().split('\n')
+    prefix = '   '
+    if docker:
+        prefix = 'RUN '
+
+    pip_packages = map(lambda p: p.strip(), pip_packages)
+    pip_packages = filter(lambda p: len(p) > 0, pip_packages)
+    return '\n'.join([f'{prefix} pip install --no-deps {p}' for p in pip_packages])
 
 
 def make_file(name, script, base_img, apt_packages, pip_packages, more=''):
@@ -51,13 +63,6 @@ apt_packages = (open('../apt_packages', 'r')
     .read()
     .replace('\n', ' '))
 
-pip_packages = (open('../requirements.txt', 'r')
-    .read()
-    .replace('\n', ' '))
-
-pip_packages_p9 = (open('../requirements_ppc.txt', 'r')
-    .read()
-    .replace('\n', ' '))
 
 # ROCm Image
 # ---------------------------------------------------
@@ -76,7 +81,7 @@ if generate_singularity:
         singularity_base,
         'rocm/pytorch:rocm2.2_ubuntu16.04_py3.6_pytorch',
         apt_packages,
-        pip_packages,
+        make_pip_install('../requirements.txt'),
         more=more_rocm
     )
 
@@ -86,7 +91,7 @@ if generate_docker:
         docker_base,
         'rocm/pytorch:rocm2.2_ubuntu16.04_py3.6_pytorch',
         apt_packages,
-        pip_packages,
+        make_pip_install('../requirements.txt'),
         more=f'RUN {more_rocm}'
     )
 
@@ -99,7 +104,7 @@ if generate_singularity:
         singularity_base,
         'ibmcom/powerai:1.5.4-all-ubuntu18.04-py3',
         apt_packages,
-        pip_packages_p9
+        make_pip_install('../requirements_ppc.txt')
     )
 
 if generate_docker:
@@ -108,7 +113,7 @@ if generate_docker:
         docker_base,
         'ibmcom/powerai:1.5.4-all-ubuntu18.04-py3',
         apt_packages,
-        pip_packages_p9
+        make_pip_install('../requirements_ppc.txt'),
     )
 
 # NVIDIA
@@ -119,7 +124,7 @@ if generate_singularity:
         singularity_base,
         'pytorch/pytorch:1.0.1-cuda10.0-cudnn7-runtime',
         apt_packages,
-        pip_packages
+        make_pip_install('../requirements.txt')
     )
 
 if generate_docker:
@@ -128,6 +133,6 @@ if generate_docker:
         docker_base,
         'pytorch/pytorch:1.0.1-cuda10.0-cudnn7-runtime',
         apt_packages,
-        pip_packages
+        make_pip_install('../requirements.txt')
     )
 

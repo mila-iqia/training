@@ -18,3 +18,7 @@ singularity/nvidia_img/
 singularity/rocm_img/
 *.pt
 *.xlsx
+
+Singularity.rocm
+Singularity.power9
+Singularity.nvidia
