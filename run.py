@@ -56,6 +56,8 @@ if not opt.no_nocahe:
 if opt.singularity is not None:
     exec_prefix.append(f'singularity exec {opt.singularity}')
 
+exec_prefix = ' '.join(exec_prefix)
+
 
 class JobRunnerException(Exception):
     def __init__(self, exceptions, total_processes):
@@ -89,13 +91,14 @@ def make_configs(args, current=''):
 
 def run_job(cmd, config, group, name):
     """ Run a model on each GPUs """
-    env['CGROUP'] = group
     env['BENCH_NAME'] = name
 
     if device_count <= 1 or group == cgroups['all']:
         env['JOB_ID'] = '0'
         env['CUDA_VISIBLE_DEVICES'] = ','.join([str(i) for i in range(device_count)])
-        subprocess.check_call(f"{cmd} {config} --seed {device_count}", shell=True, env=env)
+        prefix = exec_prefix.replace('$CGROUP', group)
+
+        subprocess.check_call(f"{prefix} {cmd} {config} --seed {device_count}", shell=True, env=env)
         return
 
     cmd = f"{cmd} {config}"
@@ -105,9 +108,9 @@ def run_job(cmd, config, group, name):
     processes = []
     # use all those GPU
     for i in range(device_count):
-        env['CGROUP'] = f'{group}{i}'
+        prefix = exec_prefix.replace('$CGROUP', f'{group}{i}')
 
-        exec_cmd = f"{cmd} --seed {i}"
+        exec_cmd = f"{prefix} {cmd} --seed {i}"
         processes.append(subprocess.Popen(f'JOB_ID={i} CUDA_VISIBLE_DEVICES={i} {exec_cmd}', env=env, shell=True))
 
     exceptions = []
