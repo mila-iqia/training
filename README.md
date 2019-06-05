@@ -96,7 +96,6 @@ You can run individual test using the command below
 Total Time  6332.38 s
 ```
 
-
 # Features
 
 * End to End - No details; faster wins
