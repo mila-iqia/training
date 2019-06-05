@@ -30,8 +30,6 @@ git checkout -b vendor
 
 sudo apt install $(cat apt-packages)
 
-./cgroup_setup.sh
-
 # install dependencies
 pip install Cython
 pip install --no-deps -r requirements.txt
@@ -42,7 +40,6 @@ pip install -e common
 
 # This will run the baselines bench
 #  ~ 2-4h depending on hardware
-
 export BASE=/home/mila/mlperf
 ./run.sh [--jobs baselines.json]
 ```
