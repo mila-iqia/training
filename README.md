@@ -7,8 +7,13 @@ Training Benchmarks
 
 3 Containers are officially supported
 * ROCm: for AMD GPUs (x86_64)
-* PowerAI for IBM Power9 (ppe_64le)+ (with NVIDIA GPUs) 
+* PowerAI for IBM Power9 (ppe_64le) + (with NVIDIA GPUs)
 * NGC for NVIDIA GPUs on (x86_64)
+
+Some prebuilt container can be found at [training-container][100]
+
+[100]: https://www.singularity-hub.org/collections/3109
+
 
 ```bash
 git clone https://github.com/Delaunay/training.git

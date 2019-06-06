@@ -1,6 +1,8 @@
 #!/bin/bash
 # This is from https://www.sylabs.io/guides/3.2/user-guide/quick_start.html#quick-installation-steps
 
+set -ex
+
 sudo apt-get update && sudo apt-get install -y \
     build-essential \
     libssl-dev \
@@ -15,12 +17,17 @@ sudo apt-get update && sudo apt-get install -y \
 export VERSION=1.11.10 OS=linux ARCH=amd64
 temp=$(mktemp -d)
 
+echo $temp
+
 cd $temp
 #    https://dl.google.com/go/go1.11.10.linux-amd64.tar.gz
 wget https://dl.google.com/go/go$VERSION.$OS-$ARCH.tar.gz
 sudo tar -C /usr/local -xzf go$VERSION.$OS-$ARCH.tar.gz
 
 rm -rf $temp
+
+export GOPATH=${HOME}/go
+export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin
 
 echo 'export GOPATH=${HOME}/go' >> ~/.bashrc
 echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc
