@@ -15,12 +15,6 @@ def isdir(path):
     return path[0] != '.'and os.path.isdir(path)
 
 
-def make_title(index, name, depth=0):
-    indent = ' ' * depth * 4
-    title = '{}) {}'.format(index + 1, name.replace('_', ' ').capitalize())
-    print('{}{}\n{}{}'.format(indent, title, indent, '-' * len(title)))
-
-
 sys.stderr = sys.stdout
 base_path = '/'.join(__file__.split('/')[:-1])
 experiment = open(f'{path}/download_summary.txt', 'a')
@@ -52,7 +46,6 @@ def run_script(download_script):
 # Task
 for i1, task in enumerate(filter(isdir, os.listdir(base_path))):
     models_path = os.path.join(base_path, task)
-    make_title(i1, task)
 
     i2 = 0
     for model in os.listdir(models_path):

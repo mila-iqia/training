@@ -14,6 +14,7 @@ def save_output(fname, data):
     with open(fname, 'w') as f:
         f.writelines(data)
 
+
 def main():
     args = parse_args()
 
