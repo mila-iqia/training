@@ -4,7 +4,7 @@ SCRIPT_PATH=$(dirname "$0")
 source ${SCRIPT_PATH}/../config.env
 
 mkdir -p ${DATA_DIRECTORY}/coco
-
+set -e
 
 if [ ! -f ${DATA_DIRECTORY}/coco2017.cache ]; then
     touch ${DATA_DIRECTORY}/coco2017.cache

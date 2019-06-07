@@ -2,7 +2,7 @@
 
 SCRIPT_PATH=$(dirname "$0")
 source ${SCRIPT_PATH}/../config.env
-
+set -e
 
 if [ ! -f ${DATA_DIRECTORY}/ml-20m.cache ]; then
     touch ${DATA_DIRECTORY}/ml-20m.cache

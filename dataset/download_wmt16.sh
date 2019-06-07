@@ -2,7 +2,7 @@
 
 SCRIPT_PATH=$(dirname "$0")
 source ${SCRIPT_PATH}/../config.env
-
+set -e
 
 
 # Copyright 2017 Google Inc.
@@ -18,8 +18,6 @@ source ${SCRIPT_PATH}/../config.env
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-#set -e
 
 if [ ! -f ${DATA_DIRECTORY}/wmt16.cache ]; then
 
