@@ -1,11 +1,8 @@
 import os
-import glob
 import subprocess
-import sys
 import time
 import json
 import copy
-import shlex
 import traceback
 import multiprocessing
 import torch
@@ -23,6 +20,7 @@ parser.add_argument('--no-cgexec', action='store_true', help='do not execute ins
 parser.add_argument('--no-nocache', action='store_true', help='do not use nocache')
 
 parser.add_argument('--singularity', type=str, default=None, help='singularity image to use')
+parser.add_argument('--raise-error', action='store_true', default=False)
 
 
 cpu_count = multiprocessing.cpu_count()
@@ -93,7 +91,7 @@ def run_job(cmd, config, group, name):
     """ Run a model on each GPUs """
     env['BENCH_NAME'] = name
 
-    if device_count <= 1 or group == cgroups['all']:
+    if group == cgroups['all']:
         env['JOB_ID'] = '0'
         env['CUDA_VISIBLE_DEVICES'] = ','.join([str(i) for i in range(device_count)])
         prefix = exec_prefix.replace('$CGROUP', group)
@@ -124,6 +122,9 @@ def run_job(cmd, config, group, name):
         except Exception as e:
             process.kill()
             exceptions.append(e)
+
+            if opt.raise_error:
+                raise e
 
     if len(exceptions) > 0:
         raise JobRunnerException(exceptions, device_count)
@@ -166,10 +167,16 @@ def run_job_def(definition, name=None):
             else:
                 msg = f'{cmd} {(time.time() - s) / 60:8.2f} s partial failed {failed}/{total}\n'
 
+            if opt.raise_error:
+                raise e
+
         except Exception as e:
             traceback.print_exc()
             print(' ' * 4 * 3, cmd)
             msg = f'{cmd} {(time.time() - s) / 60:8.2f} s failed\n'
+
+            if opt.raise_error:
+                raise e
 
         print(msg)
         experiment.write(msg)
