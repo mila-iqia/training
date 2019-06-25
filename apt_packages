@@ -17,3 +17,4 @@ libffi-dev
 libhdf5-dev
 gfortran
 cmake
+virtualenv
