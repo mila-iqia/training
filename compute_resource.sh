@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 if [[ -z "${RESOURCE_COMPUTED}" ]]; then
     # System Stats
     export DEVICE_TOTAL=0
