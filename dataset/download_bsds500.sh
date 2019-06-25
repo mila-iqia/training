@@ -2,6 +2,7 @@
 
 SCRIPT_PATH=$(dirname "$0")
 source ${SCRIPT_PATH}/../config.env
+set -e
 
 if [ ! -f ${DATA_DIRECTORY}/bsds500.cache ]; then
     mkdir -p ${DATA_DIRECTORY}/bsds500

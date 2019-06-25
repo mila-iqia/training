@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 if [[ ! -f /sys/fs//cgroup/memory/student0/memory.limit_in_bytes ]]; then
     SCRIPT_PATH=$(dirname "$0")
     source $SCRIPT_PATH/compute_resource.sh
@@ -32,7 +34,7 @@ if [[ ! -f /sys/fs//cgroup/memory/student0/memory.limit_in_bytes ]]; then
     # Bound the resource for a student
     for i in $(seq $DEVICE_TOTAL); do
         i=$(($i - 1))
-        
+
         cgdelete cpuset,memory:student${i} 2> /dev/null
         cgcreate -a $USER:$USER -t $USER:$USER -g cpuset,memory:student${i}
 

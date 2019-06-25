@@ -34,15 +34,21 @@ export BASE=~/location
 
 ## Bare bone
 
+* Tested on **python 3.6**
+
 ```bash
+python --version
+> Python 3.6.4
+
 git clone ....
 cd training
 git checkout -b vendor
 
-sudo apt install $(cat apt-packages)
+sudo apt install $(cat apt_packages)
 
 # install dependencies
 pip install Cython
+pip install numpy
 pip install --no-deps -r requirements.txt
 pip install -e common
 
@@ -140,6 +146,27 @@ each script source the `config.env` before running. The file defines the locatio
 Each `run*.sh` script should be runnable from any working directory
 
 # Data Sets
+
+    du -hd 2 data/
+    205M    data/wmt16/mosesdecoder
+    4.5G    data/wmt16/data
+    828K    data/wmt16/subword-nmt
+    13G     data/wmt16
+    16G     data/ImageNet/train
+    16G     data/ImageNet
+    73M     data/bsds500/BSR
+    73M     data/bsds500
+    53M     data/mnist/raw
+    106M    data/mnist/MNIST
+    53M     data/mnist/processed
+    211M    data/mnist
+    19G     data/coco/train2017
+    796M    data/coco/annotations
+    788M    data/coco/val2017
+    20G     data/coco
+    1.2M    data/time_series_prediction
+    1.8G    data/ml-20m
+    50G     data/
 
 * Through Academic Torrent
   * LSUN [(168.09Gb)][1]

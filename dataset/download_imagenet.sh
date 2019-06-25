@@ -3,6 +3,7 @@
 SCRIPT_PATH=$(dirname "$0")
 source ${SCRIPT_PATH}/../config.env
 
+set -e
 
 if [ ! -f ${DATA_DIRECTORY}/ImageNet.cache ]; then
     touch ${DATA_DIRECTORY}/ImageNet.cache
