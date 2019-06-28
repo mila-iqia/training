@@ -3,9 +3,41 @@ Training Benchmarks
 
 # How to run it
 
-## Singularity
+## Bare bone
 
-3 Containers are officially supported
+* Tested on **python 3.6**
+
+* Install dependencies
+```bash
+> sudo apt install git
+> git clone https://github.com/mila-iqia/training.git
+> cd training
+> sudo apt install $(cat apt_packages)
+
+> virtualenv ~/mlperf --python=python3.6
+> source activate ~/mlperf/bin/activate
+
+> pip install -e common
+> pip instal Cython
+> pip install numpy
+> pip install --no-deps -r requirements.txt
+
+> export BASE=~/data/
+> ./cgroup_setup.sh
+> ./download_datasets.sh
+```
+
+* Execute the benchmarks
+
+```batch
+> source activate ~/mlperf/bin/activate
+> export BASE=~/data/
+> ./run.sh --jobs baselines.json
+```
+
+## Singularity [Experimental]
+
+3 Containers are experimentally supported
 * ROCm: for AMD GPUs (x86_64)
 * PowerAI for IBM Power9 (ppe_64le) + (with NVIDIA GPUs)
 * NGC for NVIDIA GPUs on (x86_64)
@@ -16,50 +48,23 @@ Some prebuilt container can be found at [training-container][100]
 
 
 ```bash
-git clone https://github.com/Delaunay/training.git
-cd training
-git checkout -b vendor
+> sudo apt install git
+
+> git clone https://github.com/Delaunay/training.git
+> cd training
 
 # Generate the Singularity files
-./install_singularity.sh
-cd signularity
-python generate_container.py
-singularity build rocm.simg Singularity.rocm
-cd ..
+> ./install_singularity.sh
+> cd signularity
+> python generate_container.py
+> singularity build rocm.simg Singularity.rocm
+> cd ..
 
 # Run the benchmarks
-export BASE=~/location
-./run.sh --singularity rocm.simg [--jobs baselines.json]
+> export BASE=~/location
+> ./run.sh --singularity rocm.simg [--jobs baselines.json]
 ```
 
-## Bare bone
-
-* Tested on **python 3.6**
-
-```bash
-python --version
-> Python 3.6.4
-
-git clone ....
-cd training
-git checkout -b vendor
-
-sudo apt install $(cat apt_packages)
-
-# install dependencies
-pip install Cython
-pip install numpy
-pip install --no-deps -r requirements.txt
-pip install -e common
-
-# install pytorch
-...
-
-# This will run the baselines bench
-#  ~ 2-4h depending on hardware
-export BASE=/home/mila/mlperf
-./run.sh [--jobs baselines.json]
-```
 
 ## Details
 
