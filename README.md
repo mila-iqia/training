@@ -35,6 +35,38 @@ Training Benchmarks
 > ./run.sh --jobs baselines.json
 ```
 
+* To get reproducible results we recommend the user to run the benchmark 10 times using `./run_10.sh`
+After running the benchmarks 10 times you can use `mlbench-report` to get a report for your device.
+The tool requires a minimum of 4 runs to work.
+
+```bash
+> mlbench-report --reports $BASE/
+
+                                                                                         result           sd       sd%
+atari_e2f3fe0546_dd03cd0f4d73da1849dda236a888941114b38d344a6ebea26da5712cd129...       1.239247     0.022964  0.018530
+cart_3c703de83b_ccba6b093b526f0cb391038014620a27ac5d84c9f9f2a7dc18a1be765e416eae    3408.961050    72.073918  0.021142
+convnet_8661315414_32e210092e9f466417b919b8c28fb43846937497273a57cf2811fd95b4...     143.165105     0.681476  0.004760
+convnet_distributed_c6bba3b4f4_6b07c0ce75d6f14f5885285777ef6955755490b30e6375...     225.988936     1.025696  0.004539
+convnet_distributed_fp16_c6bba3b4f4_c6fafa7fa5f9039189fca8f36891cc6ce34bd8433...     315.806405     0.845454  0.002677
+convnet_fp16_8661315414_679f3aebe6899e635d2d4f6b55892408a5162f7943c3c2029e0b1...     188.526259     0.411091  0.002181
+dcgan_all_b9e0573060_2001e4a6ae67bd21141ab6245d730e4f4a8015d45c024d4c9fa1b174...     261.599951     1.302347  0.004978
+dcgan_b9e0573060_4479b0a0da45f9047203abc12bb3f8ad77ad2f7eaabdda5bedfc8da339cf...     192.102628     4.167030  0.021692
+fast_style_8548745942_4a7c164fce0e0eeccf6342775301273d57213a82ab1ee72257aa14e...     179.432926     1.161558  0.006473
+loader_89452a8721_6d9e8d8f168b5aa079a7e07060bfd85117230c64b3e7d6b16ac7cb34383...    1328.147562   120.488680  0.090719
+recom_4e5416d201_32a02f06e63a4d708008ece4eadff6ea41e80c1926a6c0a389b5fe05d31e...   18683.003248   140.090284  0.007498
+reso_2db952ad83_4eb5e9316440d9e22a9b8dd02d1af87f81850581837fec3a0a34a8ddac559a8d     152.090354     1.058333  0.006959
+ssd_c861f831bf_b19c65f55694a1ce268db6a506576daaf10e252581ecfb6b0cb0631205a41011       58.581525     0.461788  0.007883
+toy_lstm_c91749e5dc_f1e2cdca8961ea9f71e8acdbf7d256cace772e3622618a10b068189e2...       0.479538     0.005167  0.010776
+toy_reg_308a5984e9_e8dc1b0a9a06bb2a0719a09869a9737049edfa893e353572d116d31411...  147298.734937  3778.620055  0.025653
+translator_e89027e02b_e5a9a2e97e7d140dfe0f8093939c58c4ce6486b96f9a53ec9a3f3f5...      86.263107     0.333906  0.003871
+vae_045f044441_cd5c0c8d9c6dd51e41753854900087feb2cbff729c67380f72daf2df1982e3b7     4717.010770    56.374548  0.011951
+wlm_2c81324f51_943d4e0dc55a9d8a6ae22caaaee35710fd8cc13a304f32b03644f4fb5279de3e      705.432753     5.092593  0.007219
+wlmfp16_9db33cdeec_5458c14e5aaef1c97c33b35231ae717d0bc5ebc522d7cedcddad166f24...    1282.657099     5.394817  0.004206
+--
+Error Margin: 1.3879 %
+```
+
+
 ## Singularity [Experimental]
 
 3 Containers are experimentally supported
