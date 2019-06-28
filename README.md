@@ -40,7 +40,8 @@ After running the benchmarks 10 times you can use `mlbench-report` to get a repo
 The tool requires a minimum of 4 runs to work.
 
 ```bash
-> mlbench-report --reports $BASE/
+> mlbench-report --reports $BASE/ --name baselines
+> mlbench-report --reports $BASE/ --name vendor
 
                                                                                          result           sd       sd%
 atari_e2f3fe0546_dd03cd0f4d73da1849dda236a888941114b38d344a6ebea26da5712cd129...       1.239247     0.022964  0.018530
