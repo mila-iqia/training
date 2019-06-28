@@ -33,6 +33,12 @@ Training Benchmarks
 > source activate ~/mlperf/bin/activate
 > export BASE=~/data/
 > ./run.sh --jobs baselines.json
+
+> cp baselines.json tweaked.json
+
+# modify tweaked.json to reflect the device capacity
+
+> ./run.sh --jobs tweaked.json  # run the tweaked version
 ```
 
 * To get reproducible results we recommend the user to run the benchmark 10 times using `./run_10.sh`
@@ -40,8 +46,8 @@ After running the benchmarks 10 times you can use `mlbench-report` to get a repo
 The tool requires a minimum of 4 runs to work.
 
 ```bash
-> mlbench-report --reports $BASE/ --name baselines
-> mlbench-report --reports $BASE/ --name vendor
+> mlbench-report --reports $BASE/ --name baselines  <= baselines if the name of the baseline report
+> mlbench-report --reports $BASE/ --name tweaked    
 
                                                                                          result           sd       sd%
 atari_e2f3fe0546_dd03cd0f4d73da1849dda236a888941114b38d344a6ebea26da5712cd129...       1.239247     0.022964  0.018530
