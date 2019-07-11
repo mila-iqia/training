@@ -89,10 +89,10 @@ Some prebuilt container can be found at [training-container][100]
 ```bash
 > sudo apt install git
 
-> git clone https://github.com/Delaunay/training.git
+> git clone https://github.com/mila-iqia/training.git
 > cd training
 
-# Generate the Singularity files
+# Install & Generate the Singularity files
 > ./install_singularity.sh
 > cd signularity
 > python generate_container.py
