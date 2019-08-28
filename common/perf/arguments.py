@@ -11,8 +11,7 @@ class CMLExperimentMock:
 
 try:
     from comet_ml import Experiment as CMLExperiment
-except Exception as e:
-    print(e)
+except:
     CMLExperiment = CMLExperimentMock
 
 
@@ -152,8 +151,7 @@ class Experiment:
                 project_name=self.cmd,
                 workspace=os.environ.get("CML_WORKSPACE")
             )
-        except Exception as e:
-            print(e)
+        except:
             self.remote_logger = CMLExperimentMock()
 
     def get_arguments(self, parser, *args, **kwargs):

@@ -9,61 +9,45 @@ Training Benchmarks
 
 * Install dependencies
 ```bash
-> sudo apt install git
-> git clone https://github.com/mila-iqia/training.git
-> cd training
-> sudo apt install $(cat apt_packages)
+$ sudo apt install git
+$ git clone https://github.com/mila-iqia/training.git
+$ cd training
+$ sudo apt install $(cat apt_packages)
 
-> virtualenv ~/mlperf --python=python3.6
-> source activate ~/mlperf/bin/activate
+$ virtualenv ~/mlperf --python=python3.6
+$ source activate ~/mlperf/bin/activate
 
-> pip install -e common
-> pip instal Cython
-> pip install numpy
-> pip install --no-deps -r requirements.txt
+$ python --version
+> Python 3.6.4
 
-> export BASE=~/data/
-> ./cgroup_setup.sh
-> ./download_datasets.sh
+$ pip install -e common
+$ pip instal Cython
+$ pip install numpy
+$ pip install --no-deps -r requirements.txt
+
+$ export BASE=~/data/
+$ ./cgroup_setup.sh
+$ ./download_datasets.sh
 ```
 
 * Execute the benchmarks
 
 ```batch
-> source activate ~/mlperf/bin/activate
-> export BASE=~/data/
-> ./run.sh --jobs baselines.json
+$ source activate ~/mlperf/bin/activate
+$ export BASE=~/data/
+$ ./run.sh --jobs baselines.json
 
-> cp baselines.json tweaked.json
+$ cp baselines.json tweaked.json
 
 # modify tweaked.json to reflect the device capacity
-
-> ./run.sh --jobs tweaked.json  # run the tweaked version
+$ ./run.sh --jobs tweaked.json  # run the tweaked version
 ```
 
 * To get reproducible results we recommend the user to run the benchmark 10 times using `./run_10.sh`
 After running the benchmarks 10 times you can use `mlbench-report` to get a report for your device.
 The tool requires a minimum of 4 runs to work.
 
-* Tested on **python 3.6**
-
 ```bash
-
-$ python --version
-> Python 3.6.4
-
-$ git clone ....
-$ cd training
-$ git checkout -b vendor
-
-$ sudo apt install $(cat apt_packages)
-
-# install dependencies
-$ pip install Cython
-$ pip install numpy
-$ pip install --no-deps -r requirements.txt
-$ pip install -e common
-
 $ mlbench-report --reports $BASE/ --name baselines  # <= baselines if the name of the baseline report
 $ mlbench-report --reports $BASE/ --name tweaked    
 
@@ -124,7 +108,19 @@ Some prebuilt container can be found at [training-container][100]
 
 ## Docker [Experimental]
 
+You can use cgroups and docker using the script below.
 
+```bash
+$ sudo docker run --cap-add=SYS_ADMIN --security-opt=apparmor:unconfined -it my_docker
+$ apt-get install cgroup-bin cgroup-lite libcgroup1
+$ mount -t tmpfs cgroup_root /sys/fs/cgroup
+
+$ mkdir /sys/fs/cgroup/cpuset
+$ mount -t cgroup cpuset -o cpuset /sys/fs/cgroup/cpuset
+
+$ mkdir /sys/fs/cgroup/memory
+$ mount -t cgroup memory -o memory /sys/fs/cgroup/memory
+```
 
 ## Details
 
@@ -137,14 +133,13 @@ You can run individual test using the command below
 * the benchmark starts with two toy examples to make sure everything is setup properly
 
 * Each bench run `N_GPU` times in parallel with only `N_CPU / N_GPU` and `RAM / N_GPU` to simulate multiple users.
-  * if your machine has 16 GPUs and 32 cores, the bench will run in parallel 16 times with only 2 cores.
+  * if your machine has 16 GPUs and 32 cores, the bench will run in parallel 16 times with only 2 cores for each GPUs.
 
 * Some tasks are allowed to use the machine entirely (`convnet_all`, `dcgan_all`)
 
 * When installing pytorch you have to make sure that it is compiled with LAPACK (for the QR decomposition)
    
 * Since the tests run for approximately 3h you can check the result of each step by doing `cat $OUTPUT_DIRECTORY/summary.txt`
-
 
 * Stop a run that is in progress ?
     * `kill -9 $(ps | grep run | awk '{print $1}' | paste -s -d ' ')`
