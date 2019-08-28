@@ -21,8 +21,10 @@ if [[ ! -f /sys/fs//cgroup/memory/student0/memory.limit_in_bytes ]]; then
     sudo chmod u+s /sbin/sysctl
 
     # all group has no constraint
-    cgdelete memory:all 2> /dev/null
-    cgcreate -a $USER:$USER -t $USER:$USER -g memory:all
+    if [[ -f /sys/fs//cgroup/memory/all/memory.limit_in_bytes ]]; then
+       cgdelete memory:all
+    fi
+    sudo cgcreate -a $USER:$USER -t $USER:$USER -g memory:all
     cgexec -g memory:all echo "all group is working"
     # ----
 
@@ -35,8 +37,11 @@ if [[ ! -f /sys/fs//cgroup/memory/student0/memory.limit_in_bytes ]]; then
     for i in $(seq $DEVICE_TOTAL); do
         i=$(($i - 1))
 
-        cgdelete cpuset,memory:student${i} 2> /dev/null
-        cgcreate -a $USER:$USER -t $USER:$USER -g cpuset,memory:student${i}
+        if [[ -f /sys/fs//cgroup/memory/student$i/memory.limit_in_bytes ]]; then
+            cgdelete cpuset,memory:student${i}
+        fi
+
+        sudo cgcreate -a $USER:$USER -t $USER:$USER -g cpuset,memory:student${i}
 
         CPU_CONSTRAINT="$(($CPU_COUNT * $i))-$(($CPU_COUNT * ($i + 1) - 1))"
 
