@@ -15,16 +15,16 @@ if [[ ! -f /sys/fs//cgroup/memory/student0/memory.limit_in_bytes ]]; then
 
     # make users able to manage cgroup
     # so we can run cgcreate as user and not sudo later on
-    sudo chmod 777 -R /sys/fs/cgroup/*
+     chmod 777 -R /sys/fs/cgroup/*
 
     # make sysctl executable by user :)
-    sudo chmod u+s /sbin/sysctl
+     chmod u+s /sbin/sysctl
 
     # all group has no constraint
     if [[ -f /sys/fs//cgroup/memory/all/memory.limit_in_bytes ]]; then
        cgdelete memory:all
     fi
-    sudo cgcreate -a $USER:$USER -t $USER:$USER -g memory:all
+     cgcreate -a $USER:$USER -t $USER:$USER -g memory:all
     cgexec -g memory:all echo "all group is working"
     # ----
 
@@ -40,7 +40,7 @@ if [[ ! -f /sys/fs//cgroup/memory/student0/memory.limit_in_bytes ]]; then
         if [[ -f /sys/fs//cgroup/memory/student$i/memory.limit_in_bytes ]]; then
            cgdelete cpuset,memory:student${i}
     fi
-        sudo cgcreate -a $USER:$USER -t $USER:$USER -g cpuset,memory:student${i}
+         cgcreate -a $USER:$USER -t $USER:$USER -g cpuset,memory:student${i}
 
         CPU_CONSTRAINT="$(($CPU_COUNT * $i))-$(($CPU_COUNT * ($i + 1) - 1))"
 

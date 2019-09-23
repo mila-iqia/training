@@ -5,9 +5,11 @@ source ${SCRIPT_PATH}/config.env
 
 if [ ! -f dependencies.cache ]; then
     # Install miniconda
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $TEMP_DICRETORY
+    wget -nc https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -P $TEMP_DIRECTORY
+    
+    chmod +x $TEMP_DIRECTORY/Miniconda3-latest-Linux-x86_64.sh
 
-    ./$TEMP_DIRECTORY/Miniconda3-latest-Linux-x86_64.sh -b
+    $TEMP_DIRECTORY/Miniconda3-latest-Linux-x86_64.sh -b
 
     source ~/.bashrc
 
@@ -18,7 +20,7 @@ if [ ! -f dependencies.cache ]; then
     touch dependencies.cache
 fi
 
-sudo apt-get install -y $(cat apt-packages)
+apt-get install -y $(cat /workspace/training/apt-packages)
 
 # Install the perf library
 pip install -e common
