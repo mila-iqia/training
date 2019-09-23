@@ -14,15 +14,15 @@ if [ ! -f dependencies.cache ]; then
     source ~/.bashrc
 
     conda create -n mlperf python=3.6
-    source activate mlperf
-
+    
     echo 'DONE'
     touch dependencies.cache
 fi
 
-apt-get install -y $(cat /workspace/training/apt-packages)
+apt-get install -y $(cat ${SCRIPT_PATH}/apt-packages)
 
 # Install the perf library
+conda activate mlperf
 pip install -e common
 pip install Cython
 pip install --no-deps -r requirements.txt
