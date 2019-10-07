@@ -3,7 +3,7 @@ Training Benchmarks
 
 # How to run it
 
-## Bare bone
+## Barebone
 
 * Tested on **python 3.6**
 
@@ -172,6 +172,32 @@ You can run individual test using the command below
 ./generative_adversarial_networks/dcgan/pytorch/run.sh     3.91 min passed
 Total Time  6332.38 s
 ```
+
+# FAQ
+
+* Do all these benchmarks run/use GPUs or are some of them solely CPU-centric?
+    * 2 benchmarks do not use GPUs
+        * image_loader: which only measures IO speed when loading JPEG Images
+        * cart: which is a simplistic RL bench that only uses the CPU.
+        
+* convnet and convnet_fp16 seem to be single GPU benchmarks but nvidia-smi shows activity on all GPUs in a node. Are the other GPUs used for workers?
+    * They use a single GPU, but all scripts using a single GPU are launched N times in parallel where N is the number of GPU on the node.
+        This is done to simulate N users running N models in parallel.
+
+* Does the --workers argument launch 1 worker thread per process? Eg. In dcgan_all, where --workers=8 and --ngpu=$DEVICE_TOTAL, for 8 GPUs, will this launch 8 workers or 64 workers?
+    * The `--workers W` argument is used to initialize python dataloader which will spawn W child processes / workers to load W batches in parallel.
+    In the case of dcgan_all --workers=8 will launch 8 workers for the 8 GPUs because it uses pytorch dataparallel to split and then execute a batch on multiple GPUs.
+
+* We are using docker and `sudo` is not necessary
+    * you can set `export SUDO=''` to not use sudo
+    
+* Is there a multi-node benchmark in convnets ? If yes, what was the reference run configuration ?
+    * There are no multi-node benchmarks. Only Single Node Multi-GPU
+    
+* What does the cgroup script do ? It looks like it is environmental specific script and may not be relevant to our environment. Can we comment out that line and run the script ?
+    * No, you cannot comment out that line. The cgroups are used to emulate multiple users and force the 
+    resources of each users to be clearly segregated, similar to what Slurm 
+    does in a HPC cluster.
 
 # Features
 
