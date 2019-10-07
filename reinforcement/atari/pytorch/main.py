@@ -279,6 +279,7 @@ def main():
         exp.show_eta(j, t)
     # -- epoch
     exp.report()
+    envs.close()
 
 
 if __name__ == "__main__":

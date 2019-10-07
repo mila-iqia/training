@@ -3,42 +3,44 @@ Training Benchmarks
 
 # How to run it
 
-## Bare bone
+## Barebone
 
 * Tested on **python 3.6**
 
 * Install dependencies
 ```bash
-> sudo apt install git
-> git clone https://github.com/mila-iqia/training.git
-> cd training
-> sudo apt install $(cat apt_packages)
+$ sudo apt install git
+$ git clone https://github.com/mila-iqia/training.git
+$ cd training
+$ sudo apt install $(cat apt_packages)
 
-> virtualenv ~/mlperf --python=python3.6
-> source activate ~/mlperf/bin/activate
+$ virtualenv ~/mlperf --python=python3.6
+$ source activate ~/mlperf/bin/activate
 
-> pip install -e common
-> pip instal Cython
-> pip install numpy
-> pip install --no-deps -r requirements.txt
+$ python --version
+> Python 3.6.4
 
-> export BASE=~/data/
-> ./cgroup_setup.sh
-> ./download_datasets.sh
+$ pip install -e common
+$ pip instal Cython
+$ pip install numpy
+$ pip install --no-deps -r requirements.txt
+
+$ export BASE=~/data/
+$ ./cgroup_setup.sh
+$ ./download_datasets.sh
 ```
 
 * Execute the benchmarks
 
 ```batch
-> source activate ~/mlperf/bin/activate
-> export BASE=~/data/
-> ./run.sh --jobs baselines.json
+$ source activate ~/mlperf/bin/activate
+$ export BASE=~/data/
+$ ./run.sh --jobs baselines.json
 
-> cp baselines.json tweaked.json
+$ cp baselines.json tweaked.json
 
 # modify tweaked.json to reflect the device capacity
-
-> ./run.sh --jobs tweaked.json  # run the tweaked version
+$ ./run.sh --jobs tweaked.json  # run the tweaked version
 ```
 
 * To get reproducible results we recommend the user to run the benchmark 10 times using `./run_10.sh`
@@ -46,8 +48,8 @@ After running the benchmarks 10 times you can use `mlbench-report` to get a repo
 The tool requires a minimum of 4 runs to work.
 
 ```bash
-> mlbench-report --reports $BASE/ --name baselines  <= baselines if the name of the baseline report
-> mlbench-report --reports $BASE/ --name tweaked    
+$ mlbench-report --reports $BASE/ --name baselines  # <= baselines if the name of the baseline report
+$ mlbench-report --reports $BASE/ --name tweaked    
 
                                                                                          result           sd       sd%
 atari_e2f3fe0546_dd03cd0f4d73da1849dda236a888941114b38d344a6ebea26da5712cd129...       1.239247     0.022964  0.018530
@@ -72,7 +74,6 @@ wlmfp16_9db33cdeec_5458c14e5aaef1c97c33b35231ae717d0bc5ebc522d7cedcddad166f24...
 --
 Error Margin: 1.3879 %
 ```
-
 
 ## Singularity [Experimental]
 
@@ -105,6 +106,22 @@ Some prebuilt container can be found at [training-container][100]
 ```
 
 
+## Docker [Experimental]
+
+You can use cgroups and docker using the script below.
+
+```bash
+$ sudo docker run --cap-add=SYS_ADMIN --security-opt=apparmor:unconfined -it my_docker
+$ apt-get install cgroup-bin cgroup-lite libcgroup1
+$ mount -t tmpfs cgroup_root /sys/fs/cgroup
+
+$ mkdir /sys/fs/cgroup/cpuset
+$ mount -t cgroup cpuset -o cpuset /sys/fs/cgroup/cpuset
+
+$ mkdir /sys/fs/cgroup/memory
+$ mount -t cgroup memory -o memory /sys/fs/cgroup/memory
+```
+
 ## Details
 
 You can run individual test using the command below
@@ -116,14 +133,13 @@ You can run individual test using the command below
 * the benchmark starts with two toy examples to make sure everything is setup properly
 
 * Each bench run `N_GPU` times in parallel with only `N_CPU / N_GPU` and `RAM / N_GPU` to simulate multiple users.
-  * if your machine has 16 GPUs and 32 cores, the bench will run in parallel 16 times with only 2 cores.
+  * if your machine has 16 GPUs and 32 cores, the bench will run in parallel 16 times with only 2 cores for each GPUs.
 
 * Some tasks are allowed to use the machine entirely (`convnet_all`, `dcgan_all`)
 
 * When installing pytorch you have to make sure that it is compiled with LAPACK (for the QR decomposition)
    
 * Since the tests run for approximately 3h you can check the result of each step by doing `cat $OUTPUT_DIRECTORY/summary.txt`
-
 
 * Stop a run that is in progress ?
     * `kill -9 $(ps | grep run | awk '{print $1}' | paste -s -d ' ')`
@@ -156,6 +172,32 @@ You can run individual test using the command below
 ./generative_adversarial_networks/dcgan/pytorch/run.sh     3.91 min passed
 Total Time  6332.38 s
 ```
+
+# FAQ
+
+* Do all these benchmarks run/use GPUs or are some of them solely CPU-centric?
+    * 2 benchmarks do not use GPUs
+        * image_loader: which only measures IO speed when loading JPEG Images
+        * cart: which is a simplistic RL bench that only uses the CPU.
+        
+* convnet and convnet_fp16 seem to be single GPU benchmarks but nvidia-smi shows activity on all GPUs in a node. Are the other GPUs used for workers?
+    * They use a single GPU, but all scripts using a single GPU are launched N times in parallel where N is the number of GPU on the node.
+        This is done to simulate N users running N models in parallel.
+
+* Does the --workers argument launch 1 worker thread per process? Eg. In dcgan_all, where --workers=8 and --ngpu=$DEVICE_TOTAL, for 8 GPUs, will this launch 8 workers or 64 workers?
+    * The `--workers W` argument is used to initialize python dataloader which will spawn W child processes / workers to load W batches in parallel.
+    In the case of dcgan_all --workers=8 will launch 8 workers for the 8 GPUs because it uses pytorch dataparallel to split and then execute a batch on multiple GPUs.
+
+* We are using docker and `sudo` is not necessary
+    * you can set `export SUDO=''` to not use sudo
+    
+* Is there a multi-node benchmark in convnets ? If yes, what was the reference run configuration ?
+    * There are no multi-node benchmarks. Only Single Node Multi-GPU
+    
+* What does the cgroup script do ? It looks like it is environmental specific script and may not be relevant to our environment. Can we comment out that line and run the script ?
+    * No, you cannot comment out that line. The cgroups are used to emulate multiple users and force the 
+    resources of each users to be clearly segregated, similar to what Slurm 
+    does in a HPC cluster.
 
 # Features
 
