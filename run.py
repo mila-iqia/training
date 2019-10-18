@@ -10,7 +10,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dry', action='store_true', default=False)
-parser.add_argument('--jobs', type=str, default='baselines.json', help='jobs definition file')
+parser.add_argument('--jobs', type=str, default='fast.json', help='jobs definition file')
 parser.add_argument('--name', type=str, default=None, help='name of the job to run')
 parser.add_argument('--show', action='store_true', default=False)
 parser.add_argument('--verbose', action='store_true', default=False)
@@ -21,6 +21,10 @@ parser.add_argument('--no-nocache', action='store_true', help='do not use nocach
 
 parser.add_argument('--singularity', type=str, default=None, help='singularity image to use')
 parser.add_argument('--raise-error', action='store_true', default=False)
+
+# This is not the way you want to do reproducible benchmarks
+parser.add_argument('--free-for-all', action='store_true', default=False,
+                    help='run all the benchmarks in parallel making all benchs fight for their resources')
 
 
 cpu_count = multiprocessing.cpu_count()
@@ -184,7 +188,15 @@ def run_job_def(definition, name=None):
 
 
 def run_job_file(name):
-    jobs = json.load(open(opt.jobs, 'r'))
+    job_file = opt.jobs
+
+    # check if the file exists in the CWD
+    if not os.path.exists(job_file):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        job_file = f'{current_dir}/{job_file}'
+
+    print(f'Using {job_file}')
+    jobs = json.load(open(job_file, 'r'))
     start_all = time.time()
 
     for job in jobs:
