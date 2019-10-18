@@ -40,7 +40,6 @@ def get_batch(batch_size=32):
     return x, y
 
 
-
 # add benchmark arguments
 parser = parser_base()
 exp = Experiment(__file__)

@@ -107,6 +107,7 @@ def generate_execution_environment(cmd, arguments, group, name):
     """ Run a model on each GPUs """
     job_env = copy.deepcopy(env)
     job_env['BENCH_NAME'] = name
+    job_env['RUN_ID'] = opt.uid
 
     if group == cgroups['all']:
         job_env['JOB_ID'] = '0'

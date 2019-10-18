@@ -19,6 +19,7 @@ parser.add_argument('--exclude', type=str, default='', help='name of the experie
 parser.add_argument('--no-cgexec', action='store_true', help='do not execute inside a cgroup')
 parser.add_argument('--no-nocache', action='store_true', help='do not use nocache')
 
+parser.add_argument('--uid', type=int, default=0)
 parser.add_argument('--singularity', type=str, default=None, help='singularity image to use')
 parser.add_argument('--raise-error', action='store_true', default=False)
 
@@ -94,13 +95,14 @@ def make_configs(args, current=''):
 def run_job(cmd, config, group, name):
     """ Run a model on each GPUs """
     env['BENCH_NAME'] = name
+    env['RUN_ID'] = opt.uid
 
     if group == cgroups['all']:
         env['JOB_ID'] = '0'
         env['CUDA_VISIBLE_DEVICES'] = ','.join([str(i) for i in range(device_count)])
         prefix = exec_prefix.replace('$CGROUP', group)
 
-        subprocess.check_call(f"{prefix} {cmd} {config} --seed {device_count}", shell=True, env=env)
+        subprocess.check_call(f"{prefix} {cmd} {config} --seed {opt.uid + device_count}", shell=True, env=env)
         return
 
     cmd = f"{cmd} {config}"
@@ -112,7 +114,7 @@ def run_job(cmd, config, group, name):
     for i in range(device_count):
         prefix = exec_prefix.replace('$CGROUP', f'{group}{i}')
 
-        exec_cmd = f"{prefix} {cmd} --seed {i}"
+        exec_cmd = f"{prefix} {cmd} --seed {opt.uid + (i + 1) * 100}"
         processes.append(subprocess.Popen(f'JOB_ID={i} CUDA_VISIBLE_DEVICES={i} {exec_cmd}', env=env, shell=True))
 
     exceptions = []
