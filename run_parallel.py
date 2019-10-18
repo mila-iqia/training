@@ -3,8 +3,6 @@ import subprocess
 import time
 import json
 import copy
-from typing import List
-import traceback
 import multiprocessing
 import torch
 import argparse
@@ -81,12 +79,6 @@ exec_prefix = ' '.join(exec_prefix)
 # ---
 
 
-class JobRunnerException(Exception):
-    def __init__(self, exceptions, total_processes):
-        self.exceptions = exceptions
-        self.total_processes = total_processes
-
-
 def show():
     jobs = json.load(open(opt.jobs, 'r'))
     job_names = [job['name'] for job in jobs]
@@ -125,7 +117,6 @@ def generate_execution_environment(cmd, arguments, group, name):
 
     base_cmd = f"{cmd} {arguments}"
 
-    # use all those GPU
     # for i in range(device_count):
     job_env['JOB_ID'] = str(0)
     job_env['CUDA_VISIBLE_DEVICES'] = str(0)
