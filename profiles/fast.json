@@ -1,0 +1,297 @@
+[
+  {
+    "name": "toy_reg",
+    "cmd": "./regression/polynome/pytorch/run.sh",
+    "args":{
+      "--repeat": 20,
+      "--number": 100,
+      "--batch-size": 256,
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": ""
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "toy_lstm",
+    "cmd": "./time_sequence_prediction/lstm/pytorch/run.sh",
+    "args":{
+      "--repeat": 10,
+      "--number": 5,
+      "--dtype":  "float32",
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": ""
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "vae",
+    "cmd": "./variational_auto_encoder/auto_encoding_variational_bayes/pytorch/run.sh",
+    "args":{
+      "--repeat": 50,
+      "--number": 30,
+      "--batch-size": 128,
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": ""
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "loader",
+    "cmd": "./image_loading/loader/pytorch/run.sh",
+    "args":{
+      "--data": "$DATA_DIRECTORY/ImageNet/train",
+      "--workers": 8,
+      "--repeat": 15,
+      "--number": 5,
+      "--batch-size": 256,
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": ""
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "reso",
+    "cmd": "./super_resolution/subpixel_convolution/pytorch/run.sh",
+    "args":{
+      "--upscale_factor": 2,
+      "--batch-size": 64,
+      "--testBatchSize": 8,
+      "--repeat": 25,
+      "--number": 20,
+      "--workers": 8,
+      "--lr": 0.1,
+      "--no-checks": "",
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": ""
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "translator",
+    "cmd": "./natural_language_processing/rnn_translator/pytorch/run.sh",
+    "args":{
+      "--repeat": 15,
+      "--number": 10,
+      "--batch-size": 64,
+      "--dataset-dir": "$DATA_DIRECTORY/wmt16",
+      "--target-bleu": 21.80,
+      "--epochs": 8,
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": ""
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "wlm",
+    "cmd": "./natural_language_processing/word_language_model/pytorch/run.sh",
+    "args":{
+      "--repeat": 15,
+      "--number": 5,
+      "--batch-size": 64,
+      "--emsize":  656,
+      "--nhid": 656,
+      "--dropout": 0.5,
+      "--epochs": 5,
+      "--model": "GRU",
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": ""
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "wlmfp16",
+    "cmd": "./natural_language_processing/word_language_model/pytorch/run_fp16.sh",
+    "args":{
+      "--repeat": 15,
+      "--number": 5,
+      "--batch-size": 128,
+      "--emsize":  656,
+      "--nhid": 656,
+      "--dropout": 0.5,
+      "--epochs": 5,
+      "--model": "GRU",
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": "",
+      "--fp16": ""
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "cart",
+    "cmd": "./reinforcement/cart_pole/pytorch/run.sh",
+    "args":{
+      "--repeat": 200,
+      "--number": 500,
+      "--gamma": 0.99,
+      "--log-interval": 10,
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--no-cuda": ""
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "atari",
+    "cmd": "./reinforcement/atari/pytorch/run.sh",
+    "args":{
+      "--repeat": 15,
+      "--number": 5,
+      "--env-name": "\"PongNoFrameskip-v4\"",
+      "--num-steps": 128,
+      "--num-processes": 8,
+      "--algo": "ppo",
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--use-gae": "",
+      "--clip-param": 0.1,
+      "--value-loss-coef": 0.5,
+      "--num-mini-batch": 4,
+      "--use-linear-lr-decay": "",
+      "--entropy-coef": 0.01,
+      "--cuda": ""
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "ssd",
+    "cmd": "./object_detection/single_stage_detector/pytorch/run.sh",
+    "args":{
+      "--repeat": 15,
+      "--number": 5,
+      "--batch-size": 128,
+      "--no-save": "",
+      "--workers": 8,
+      "--data": "${DATA_DIRECTORY}/coco",
+      "--threshold": 0.212,
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": ""
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "fast_style",
+    "cmd": "./fast_neural_style/neural_style/pytorch/run.sh",
+    "args":{
+      "--repeat": 25,
+      "--number": 5,
+      "--batch-size": 128,
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": "",
+      "--workers": 8
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "dcgan",
+    "cmd": "./generative_adversarial_networks/dcgan/pytorch/run.sh",
+    "args":{
+      "--dataset": "imagenet",
+      "--dataroot": "$DATA_DIRECTORY/ImageNet/train",
+      "--imageSize": 64,
+      "--repeat": 25,
+      "--number": 5,
+      "--batch-size":  128,
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--workers": 8,
+      "--cuda": ""
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "convnet",
+    "cmd": "./image_classification/convnets/pytorch/run.sh",
+    "args":{
+      "$DATA_DIRECTORY/ImageNet/train": "",
+      "--repeat": 15,
+      "--number": 5,
+      "--batch-size": 64,
+      "--arch": "resnet101",
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--workers": 8,
+      "--opt-level": "O0"
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "convnet_fp16",
+    "cmd": "./image_classification/convnets/pytorch/run.sh",
+    "args":{
+      "$DATA_DIRECTORY/ImageNet/train": "",
+      "--repeat": 15,
+      "--number": 5,
+      "--batch-size": 128,
+      "--arch": "resnet101",
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--workers": 8,
+      "--cuda": "",
+      "--opt-level": "O1"
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "recom",
+    "cmd": "./recommendation/neural_collaborative_filtering/pytorch/run.sh",
+    "args": {
+      "$DATA_DIRECTORY/ml-20m": "",
+      "-l": 0.0005,
+      "--layers": "256 256 128 64",
+      "-f" : 64,
+      "--threshold": 0.635,
+      "--processes": 1,
+      "--workers": 8,
+      "--repeat": 25,
+      "--number": 50,
+      "--batch-size": 2048,
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": ""
+    },
+    "cgroup": "student"
+  },
+  {
+    "name": "convnet_distributed",
+    "cmd": "./image_classification/convnets/pytorch/run_distributed.sh",
+    "args":{
+      "$DATA_DIRECTORY/ImageNet/train": "",
+      "--repeat": 15,
+      "--number": 5,
+      "--batch-size": 64,
+      "--workers": 8,
+      "--arch": "resnet101",
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": "",
+      "--opt-level": "O0"
+    },
+    "cgroup": "all"
+  },
+  {
+    "name": "convnet_distributed_fp16",
+    "cmd": "./image_classification/convnets/pytorch/run_distributed.sh",
+    "args":{
+      "$DATA_DIRECTORY/ImageNet/train": "",
+      "--repeat": 15,
+      "--number": 5,
+      "--batch-size": 128,
+      "--workers": 8,
+      "--arch": "resnet101",
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": "",
+      "--opt-level":  "O1"
+    },
+    "cgroup": "all"
+  },
+  {
+    "name": "dcgan_all",
+    "cmd": "./generative_adversarial_networks/dcgan/pytorch/run.sh",
+    "args":{
+      "--dataset": "imagenet",
+      "--dataroot": "$DATA_DIRECTORY/ImageNet/train",
+      "--imageSize": 64,
+      "--repeat": 25,
+      "--number": 10,
+      "--batch-size": 128,
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--workers": 8,
+      "--ngpu": "$DEVICE_TOTAL",
+      "--cuda": ""
+    },
+    "cgroup": "all"
+  }
+]
