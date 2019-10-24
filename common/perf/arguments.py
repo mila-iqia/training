@@ -273,7 +273,7 @@ def make_report(chrono: MultiStageChrono, args: Namespace, version: str, batch_l
     args['batch_loss'] = batch_loss.to_list()
     args['epoch_loss'] = epoch_loss.to_list()
     args['metrics'] = metrics
-    args['run_id'] = os.getenvb('RUN_ID', 0)
+    args['run_id'] = os.getenv('RUN_ID', 0)
 
     for excluded in excluded_arguments:
         args.pop(excluded, None)
