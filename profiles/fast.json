@@ -71,7 +71,7 @@
     "cmd": "./natural_language_processing/rnn_translator/pytorch/run.sh",
     "args":{
       "--repeat": 15,
-      "--number": 5,
+      "--number": 10,
       "--batch-size": 64,
       "--dataset-dir": "$DATA_DIRECTORY/wmt16",
       "--target-bleu": 21.80,
