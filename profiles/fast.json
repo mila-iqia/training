@@ -285,7 +285,7 @@
       "--dataroot": "$DATA_DIRECTORY/ImageNet/train",
       "--imageSize": 64,
       "--repeat": 25,
-      "--number": 10,
+      "--number": 5,
       "--batch-size": 128,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--workers": 8,
