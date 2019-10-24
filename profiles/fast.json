@@ -282,7 +282,7 @@
       "--dataset": "imagenet",
       "--dataroot": "$DATA_DIRECTORY/ImageNet/train",
       "--imageSize": 64,
-      "--repeat": 25,
+      "--repeat": 15,
       "--number": 5,
       "--batch-size": 128,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
