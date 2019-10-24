@@ -5,7 +5,7 @@ Training Benchmarks
 
 ## Barebone
 
-* Tested on **python 3.6**
+* Tested on **python 3.6** with **pytorch 1.3**
 
 * Install dependencies
 ```bash
@@ -79,7 +79,6 @@ wlmfp16                     1282.66    1189.282292     3.609447  0.003035 -0.072
 Statistics     |     Value | Pass |
 ---------------|-----------|------|
 Quantile (80%) : +1.9792 % | True |
-Deviation      : +2.6439 % | True |
 Performance    : -0.0251 % | False 
 --
 ```
