@@ -234,10 +234,10 @@
       "--layers": "256 256 128 64",
       "-f" : 64,
       "--threshold": 0.635,
-      "--processes": 1,
+      "--processes": 4,
       "--workers": 8,
       "--repeat": 25,
-      "--number": 10,
+      "--number": 100,
       "--batch-size": 2048,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": ""
