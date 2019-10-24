@@ -206,7 +206,6 @@
       "--arch": "resnet101",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--workers": 8,
-      "--opt-level": "O0"
     },
     "cgroup": "student"
   },
@@ -222,7 +221,7 @@
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--workers": 8,
       "--cuda": "",
-      "--opt-level": "O1"
+      "--half": ""
     },
     "cgroup": "student"
   },
@@ -256,8 +255,7 @@
       "--workers": 8,
       "--arch": "resnet101",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
-      "--cuda": "",
-      "--opt-level": "O0"
+      "--cuda": ""
     },
     "cgroup": "all"
   },
@@ -273,7 +271,7 @@
       "--arch": "resnet101",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": "",
-      "--opt-level":  "O1"
+      "--half":  ""
     },
     "cgroup": "all"
   },
