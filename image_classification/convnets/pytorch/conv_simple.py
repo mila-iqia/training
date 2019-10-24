@@ -8,7 +8,6 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
 
-from apex import amp
 import time
 
 # ----
@@ -106,10 +105,7 @@ for epoch in range(args.repeat):
 
                 # compute gradient and do SGD step
                 optimizer.zero_grad()
-
-                with amp.scale_loss(loss, optimizer) as scaled_loss:
-                    scaled_loss.backward()
-
+                optimizer.backward()
                 optimizer.step()
 
     exp.show_eta(epoch, t)
