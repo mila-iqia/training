@@ -207,6 +207,15 @@ Total Time  6332.38 s
     resources of each users to be clearly segregated, similar to what Slurm 
     does in a HPC cluster.
 
+* While running fp16 task versions the warning below are shown
+
+        Warning:  multi_tensor_applier fused unscale kernel is unavailable, possibly because apex was installed without --cuda_ext --cpp_ext. Using Python fallback.  Original ImportError was: ModuleNotFoundError("No module named 'amp_C'",)
+        Attempting to unscale a grad with type torch.cuda.HalfTensor Unscaling non-fp32 grads may indicate an error. When using Amp, you don't need to call .half() on your model.
+
+    * Those can be ignored
+
+
+
 # Features
 
 * End to End - No details; faster wins
