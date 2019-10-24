@@ -1,4 +1,5 @@
 from perf import *
+from perf.fp16utils import OptimizerAdapter, ModelAdapter
 
 import os
 import torch
@@ -16,7 +17,7 @@ parser = parser_base()
 parser.add_argument('data', metavar='DIR', help='path to dataset')
 parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet18')
 parser.add_argument('--lr', '--learning-rate', default=0.1, type=float, metavar='LR')
-parser.add_argument('--opt-level', type=str)
+parser.add_argument('--half', action='store_true', default=False)
 parser.add_argument('--device_ids', type=str, default=None)
 
 
@@ -46,22 +47,15 @@ model = model.cuda()
 
 criterion = nn.CrossEntropyLoss().cuda()
 
-optimizer = torch.optim.SGD(
+optimizer = OptimizerAdapter(torch.optim.SGD(
     model.parameters(),
-    args.lr)
+    args.lr),
+    half=args.half,
+    dynamic_loss_scale=True
+)
 
 # ----
-model, optimizer = amp.initialize(
-    model,
-    optimizer,
-    enabled=args.opt_level != 'O0',
-    cast_model_type=None,
-    patch_torch_functions=True,
-    keep_batchnorm_fp32=None,
-    master_weights=None,
-    loss_scale="dynamic",
-    opt_level=args.opt_level
-)
+model = ModelAdapter(model, half=args.half)
 model = nn.DataParallel(model, device_ids=args.device_ids)
 
 

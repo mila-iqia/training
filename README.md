@@ -24,7 +24,9 @@ $ pip install -e common
 $ pip instal Cython
 $ pip install numpy
 $ pip install --no-deps -r requirements.txt
-
+$
+$ > Install Pytorch Now
+$
 $ export BASE=~/data/
 $ ./cgroup_setup.sh
 $ ./download_datasets.sh
