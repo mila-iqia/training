@@ -95,7 +95,7 @@ def make_configs(args, current=''):
 def run_job(cmd, config, group, name):
     """ Run a model on each GPUs """
     env['BENCH_NAME'] = name
-    env['RUN_ID'] = opt.uid
+    env['RUN_ID'] = str(opt.uid)
 
     if group == cgroups['all']:
         env['JOB_ID'] = '0'
@@ -195,7 +195,7 @@ def run_job_file(name):
     # check if the file exists in the CWD
     if not os.path.exists(job_file):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        job_file = f'{current_dir}/{job_file}'
+        job_file = f'{current_dir}/profiles/{job_file}'
 
     print(f'Using {job_file}')
     jobs = json.load(open(job_file, 'r'))
