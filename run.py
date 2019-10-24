@@ -137,13 +137,14 @@ def run_job(cmd, config, group, name):
     return
 
 
-def run_job_def(definition, name=None):
+def run_job_def(jid, definition, name=None, size=19):
     if name is not None and definition['name'] != name:
         return
 
     if definition['name'] in excluded:
         return
 
+    progress = f'[{jid:2d}/{size:2d}]'
     cmd = definition['cmd']
     args = list(definition['args'].items())
     configs = make_configs(args)
@@ -160,7 +161,7 @@ def run_job_def(definition, name=None):
 
             run_job(cmd, config, group, definition['name'])
 
-            msg = f'[  /  ] PASSED | {(time.time() - s) / 60:8.2f} MIN | {cmd}\n'
+            msg = f'{progress}[  /  ] PASSED | {(time.time() - s) / 60:8.2f} MIN | {cmd}\n'
 
         except JobRunnerException as e:
             print(' ' * 4 * 3, e)
@@ -168,7 +169,7 @@ def run_job_def(definition, name=None):
             failed = len(e.exceptions)
             total = e.total_processes
 
-            msg = f'[{failed:2d}/{total:2d}] FAILED | {(time.time() - s) / 60:8.2f} MIN | {cmd}\n'
+            msg = f'{progress}[{failed:2d}/{total:2d}] FAILED | {(time.time() - s) / 60:8.2f} MIN | {cmd}\n'
 
             if opt.raise_error:
                 raise e
@@ -176,7 +177,7 @@ def run_job_def(definition, name=None):
         except Exception as e:
             traceback.print_exc()
             print(' ' * 4 * 3, cmd)
-            msg = f'[  /  ] FAILED | {(time.time() - s) / 60:8.2f} MIN | {cmd}\n'
+            msg = f'{progress}[  /  ] FAILED | {(time.time() - s) / 60:8.2f} MIN | {cmd}\n'
 
             if opt.raise_error:
                 raise e
@@ -198,8 +199,8 @@ def run_job_file(name):
     jobs = json.load(open(job_file, 'r'))
     start_all = time.time()
 
-    for job in jobs:
-        run_job_def(job, name)
+    for id, job in enumerate(jobs):
+        run_job_def(id + 1, job, name, len(jobs))
 
     msg = f'Total Time {time.time() - start_all:8.2f} s\n'
     print(msg)
