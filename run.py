@@ -160,7 +160,7 @@ def run_job_def(definition, name=None):
 
             run_job(cmd, config, group, definition['name'])
 
-            msg = f'{cmd} {(time.time() - s) / 60:8.2f} min passed\n'
+            msg = f'[  /  ] PASSED | {(time.time() - s) / 60:8.2f} MIN | {cmd}\n'
 
         except JobRunnerException as e:
             print(' ' * 4 * 3, e)
@@ -168,10 +168,7 @@ def run_job_def(definition, name=None):
             failed = len(e.exceptions)
             total = e.total_processes
 
-            if failed == total:
-                msg = f'{cmd} {(time.time() - s) / 60:8.2f} s all failed {total}\n'
-            else:
-                msg = f'{cmd} {(time.time() - s) / 60:8.2f} s partial failed {failed}/{total}\n'
+            msg = f'[{failed:2d}/{total:2d}] FAILED | {(time.time() - s) / 60:8.2f} MIN | {cmd}\n'
 
             if opt.raise_error:
                 raise e
@@ -179,7 +176,7 @@ def run_job_def(definition, name=None):
         except Exception as e:
             traceback.print_exc()
             print(' ' * 4 * 3, cmd)
-            msg = f'{cmd} {(time.time() - s) / 60:8.2f} s failed\n'
+            msg = f'[  /  ] FAILED | {(time.time() - s) / 60:8.2f} MIN | {cmd}\n'
 
             if opt.raise_error:
                 raise e
