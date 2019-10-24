@@ -113,7 +113,7 @@ for epoch in range(args.repeat):
 
                 # compute gradient and do SGD step
                 optimizer.zero_grad()
-                optimizer.backward()
+                optimizer.backward(loss)
                 optimizer.step()
 
     exp.show_eta(epoch, t)
