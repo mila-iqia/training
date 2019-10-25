@@ -183,6 +183,8 @@ Total Time  2817.82 s
 
 # FAQ
 
+* If your machine supports SSE vector instructions you are allowed to replace it with pillow-simd for faster load times
+
 * For machines with NUMA nodes cgroups might be set manually by the users. If the constraint below are met
     * 1 student group per GPUs (student0 for GPU 0, ... student31 for GPU 31)
     * Each student group need to be allocated an equal amount of RAM. All students should be able to use all the RAM that has been allocated to them without issues
