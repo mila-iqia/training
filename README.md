@@ -183,6 +183,11 @@ Total Time  2817.82 s
 
 # FAQ
 
+* For machines with NUMA nodes cgroups might be set manually by the users. If the constraint below are met
+    * 1 student group per GPUs (student0 for GPU 0, ... student31 for GPU 31)
+    * Each student group need to be allocated an equal amount of RAM. All students should be able to use all the RAM that has been allocated to them without issues
+    * Each student group need to be allocated the same amount of threads, the threads need to be mutually exclusive.
+
 * Do all these benchmarks run/use GPUs or are some of them solely CPU-centric?
     * 2 benchmarks do not use GPUs
         * image_loader: which only measures IO speed when loading JPEG Images
