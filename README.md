@@ -214,6 +214,8 @@ Total Time  2817.82 s
 
     * Those can be ignored
 
+* The report show duplicated benchmarks:
+    * It means you modified the script or the arguments and the version tag is different
 
 
 # Features
