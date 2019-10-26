@@ -183,6 +183,10 @@ Total Time  2817.82 s
 
 # FAQ
 
+* When running using the AMD stack the initial compilation of each models can take a significant amount of time.
+You can remove the compilation step by using Mila's miopen compilation cache. 
+To use it you can simply execute `copy_rocm_cache.sh`.
+
 * Do all these benchmarks run/use GPUs or are some of them solely CPU-centric?
     * 2 benchmarks do not use GPUs
         * image_loader: which only measures IO speed when loading JPEG Images
@@ -215,6 +219,13 @@ Total Time  2817.82 s
     * Those can be ignored
 
 
+# ROcm Cache
+
+The cache is structured by default like so `.cache/miopen/2.1.0/<kernel_hash>/<compiled_kernel>*.cl.o`.
+We provide a zipped version of the miopen folder than you can unzip in your own cache location with the following command `unzip training/common/miopen.zip -d .cache/`.
+
+You can also copy over the performance database like so `cp training/common/gfx906_60.HIP.2_1_0.ufdb.txt ~/.config/miopen/`
+Note that the cache and database are version dependent.
 
 # Features
 

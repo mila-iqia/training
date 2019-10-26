@@ -112,10 +112,6 @@ def next_batch():
 
 def reduce_tensor(tensor):
     rt = tensor.clone()
-    # if nccl API is not avaible we cannot to the reduce on GPU
-    if not torch.distributed.is_nccl_available():
-        rt = rt.cpu()
-
     distributed.all_reduce(rt, op=distributed.ReduceOp.SUM)
     rt /= world_size
     return rt.cuda()
