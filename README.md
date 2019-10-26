@@ -187,6 +187,13 @@ Total Time  2817.82 s
 You can remove the compilation step by using Mila's miopen compilation cache. 
 To use it you can simply execute `copy_rocm_cache.sh`.
 
+* If your machine supports SSE vector instructions you are allowed to replace it with pillow-simd for faster load times
+
+* For machines with NUMA nodes cgroups might be set manually by the users. If the constraint below are met
+    * 1 student group per GPUs (student0 for GPU 0, ... student31 for GPU 31)
+    * Each student group need to be allocated an equal amount of RAM. All students should be able to use all the RAM that has been allocated to them without issues
+    * Each student group need to be allocated the same amount of threads, the threads need to be mutually exclusive.
+
 * Do all these benchmarks run/use GPUs or are some of them solely CPU-centric?
     * 2 benchmarks do not use GPUs
         * image_loader: which only measures IO speed when loading JPEG Images
@@ -218,6 +225,8 @@ To use it you can simply execute `copy_rocm_cache.sh`.
 
     * Those can be ignored
 
+* The report show duplicated benchmarks:
+    * It means you modified the script or the arguments and the version tag is different
 
 # ROcm Cache
 
