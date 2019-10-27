@@ -195,7 +195,7 @@
     },
     "cgroup": "student"
   },
-  {:
+  {
     "name": "convnet",
     "cmd": "./image_classification/convnets/pytorch/run.sh",
     "args":{
