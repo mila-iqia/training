@@ -5,7 +5,7 @@ Training Benchmarks
 
 ## Barebone
 
-* Tested on **python 3.6**
+* Tested on **python 3.6** with **pytorch 1.3**
 
 * Install dependencies
 ```bash
@@ -24,7 +24,9 @@ $ pip install -e common
 $ pip instal Cython
 $ pip install numpy
 $ pip install --no-deps -r requirements.txt
-
+$
+$ > Install Pytorch Now
+$
 $ export BASE=~/data/
 $ ./cgroup_setup.sh
 $ ./download_datasets.sh
@@ -49,36 +51,35 @@ The tool requires a minimum of 4 runs to work.
 
 ```bash
 $ mlbench-report --reports $BASE/ --name baselines --gpu-model MI50 # <= baselines if the name of the baseline report
-$ mlbench-report --reports $BASE/ --name tweaked   --gpu-model MI50
---
+$ mlbench-report --reports $BASE/ --name fast   --gpu-model RTX
                              target         result           sd       sd%      diff
 bench                                                                              
-atari                          1.24       1.422156     0.011946  0.008400  0.146900
-cart                        2000.00    3649.644284    48.360870  0.013251  0.824822
-convnet                      143.17     134.617357     0.823946  0.006121 -0.059738
-convnet_distributed          225.99     235.137116     0.723730  0.003078  0.040476
-convnet_distributed_fp16     315.81     305.890640     2.252742  0.007365 -0.031409
-convnet_fp16                 188.53     177.545945     0.880795  0.004961 -0.058262
-dcgan_all                    261.60     204.960566     1.721429  0.008399 -0.216512
-dcgan                        192.10     114.485092     1.341417  0.011717 -0.404034
-fast_style                   179.43     113.106347     1.286490  0.011374 -0.369635
-loader                      1200.00    1429.801318   174.550162  0.122080  0.191501
-recom                      18683.00   19704.124480   275.757312  0.013995  0.054655
-reso                         152.00     145.596941     2.670749  0.018343 -0.042125
-ssd                           58.58      50.646667     1.112480  0.021966 -0.135427
-toy_lstm                       0.48       0.469388     0.012905  0.027493 -0.022108
-toy_reg                   147298.73  102669.679276  3121.140121  0.030400 -0.302983
-translator                    86.26      84.927455     0.309457  0.003644 -0.015448
-vae                         4717.01    4933.465093    50.869324  0.010311  0.045888
-wlm                          705.43     669.191115     7.352764  0.010988 -0.051371
-wlmfp16                     1282.66    1189.282292     3.609447  0.003035 -0.072800
+atari                          5.41       7.424253     0.055735  0.007507  0.372320
+cart                        2000.00    2195.248475     6.457116  0.002941  0.097624
+convnet                      178.76     175.973774     0.191682  0.001089 -0.015586
+convnet_distributed          276.10     756.841070    60.333975  0.079718  1.741185
+convnet_distributed_fp16     330.41     785.470579    43.330802  0.055165  1.377260
+convnet_fp16                 262.56     329.347550     0.770485  0.002339  0.254371
+dcgan_all                    139.29     274.608760     1.361280  0.004957  0.971489
+dcgan                        115.52     147.794385     0.632454  0.004279  0.279384
+fast_style                   156.75     146.285007     0.218744  0.001495 -0.066762
+loader                      1200.00    1188.224303    62.070805  0.052238 -0.009813
+recom                      20650.19   20802.705368   103.476919  0.004974  0.007386
+reso                         138.34     178.694817     0.920870  0.005153  0.291708
+ssd                           59.96      49.263719     0.203476  0.004130 -0.178390
+toy_lstm                       2.65       1.254635     0.007228  0.005761 -0.526553
+toy_reg                   368820.18  215482.487073  3745.776792  0.017383 -0.415752
+translator                   223.47     212.040509     0.443492  0.002092 -0.051146
+vae                         7972.69    5931.232565    26.450238  0.004459 -0.256056
+wlm                         1440.87    1365.497700     2.910483  0.002131 -0.052310
+wlmfp16                     3793.37    4649.460342    18.698980  0.004022  0.225681
 --
 
-Statistics     |     Value | Pass |
----------------|-----------|------|
-Quantile (80%) : +1.9792 % | True |
-Deviation      : +2.6439 % | True |
-Performance    : -0.0251 % | False 
+Statistics               |     Value | Pass |
+-------------------------|-----------|------|
+Bench Passes             :           | True
+Deviation Quantile (80%) : +1.1458 % | True |
+Performance              : +0.2129 % | True 
 --
 ```
 
@@ -156,31 +157,42 @@ You can run individual test using the command below
 
 * You can check overall status by looking at `cat $BASE/output/summary.txt `
 
-```
-./regression/polynome/pytorch/run.sh     0.45 min passed
-./time_sequence_prediction/lstm/pytorch/run.sh     1.79 min passed
-./variational_auto_encoder/auto_encoding_variational_bayes/pytorch/run.sh     1.12 min passed
-./image_loading/loader/pytorch/run.sh     3.21 min passed
-./super_resolution/subpixel_convolution/pytorch/run.sh     4.20 min passed
-./natural_language_processing/rnn_translator/pytorch/run.sh     4.69 min passed
-./natural_language_processing/word_language_model/pytorch/run.sh     2.14 min passed
-./natural_language_processing/word_language_model/pytorch/run_fp16.sh     1.79 min passed
-./reinforcement/cart_pole/pytorch/run.sh     1.97 min passed
-./reinforcement/atari/pytorch/run.sh     6.46 min passed
-./object_detection/single_stage_detector/pytorch/run.sh    16.76 min passed
-./object_detection/single_stage_detector/pytorch/run.sh     9.80 min passed
-./fast_neural_style/neural_style/pytorch/run.sh     4.55 min passed
-./generative_adversarial_networks/dcgan/pytorch/run.sh     4.72 min passed
-./image_classification/convnets/pytorch/run.sh     1.17 min passed
-./image_classification/convnets/pytorch/run.sh     0.96 min passed
-./recommendation/neural_collaborative_filtering/pytorch/run.sh    13.08 min passed
-./image_classification/convnets/pytorch/run_distributed.sh     1.69 min passed
-./image_classification/convnets/pytorch/run_distributed.sh     2.34 min passed
-./generative_adversarial_networks/dcgan/pytorch/run.sh     3.91 min passed
-Total Time  6332.38 s
+```bash
+$ cat perf/output1/summary.txt 
+[ 1/19][  /  ] PASSED |     0.27 MIN | ./regression/polynome/pytorch/run.sh
+[ 2/19][  /  ] PASSED |     0.93 MIN | ./time_sequence_prediction/lstm/pytorch/run.sh
+[ 3/19][  /  ] PASSED |     0.78 MIN | ./variational_auto_encoder/auto_encoding_variational_bayes/pytorch/run.sh
+[ 4/19][  /  ] PASSED |     2.50 MIN | ./image_loading/loader/pytorch/run.sh
+[ 5/19][  /  ] PASSED |     1.26 MIN | ./super_resolution/subpixel_convolution/pytorch/run.sh
+[ 6/19][  /  ] PASSED |     3.20 MIN | ./natural_language_processing/rnn_translator/pytorch/run.sh
+[ 7/19][  /  ] PASSED |     1.25 MIN | ./natural_language_processing/word_language_model/pytorch/run.sh
+[ 8/19][  /  ] PASSED |     0.95 MIN | ./natural_language_processing/word_language_model/pytorch/run_fp16.sh
+[ 9/19][  /  ] PASSED |     0.91 MIN | ./reinforcement/cart_pole/pytorch/run.sh
+[10/19][  /  ] PASSED |     2.98 MIN | ./reinforcement/atari/pytorch/run.sh
+[11/19][  /  ] PASSED |     3.95 MIN | ./object_detection/single_stage_detector/pytorch/run.sh
+[12/19][  /  ] PASSED |     2.13 MIN | ./fast_neural_style/neural_style/pytorch/run.sh
+[13/19][  /  ] PASSED |     2.08 MIN | ./generative_adversarial_networks/dcgan/pytorch/run.sh
+[14/19][  /  ] PASSED |     0.85 MIN | ./image_classification/convnets/pytorch/run.sh
+[15/19][  /  ] PASSED |     0.91 MIN | ./image_classification/convnets/pytorch/run.sh
+[16/19][  /  ] PASSED |     9.34 MIN | ./recommendation/neural_collaborative_filtering/pytorch/run.sh
+[17/19][  /  ] PASSED |     1.79 MIN | ./image_classification/convnets/pytorch/run_distributed.sh
+[18/19][  /  ] PASSED |     2.42 MIN | ./image_classification/convnets/pytorch/run_distributed.sh
+[19/19][  /  ] PASSED |     8.48 MIN | ./generative_adversarial_networks/dcgan/pytorch/run.sh
+Total Time  2817.82 s
 ```
 
 # FAQ
+
+* When running using the AMD stack the initial compilation of each models can take a significant amount of time.
+You can remove the compilation step by using Mila's miopen compilation cache. 
+To use it you can simply execute `copy_rocm_cache.sh`.
+
+* If your machine supports SSE vector instructions you are allowed to replace it with pillow-simd for faster load times
+
+* For machines with NUMA nodes cgroups might be set manually by the users. If the constraint below are met
+    * 1 student group per GPUs (student0 for GPU 0, ... student31 for GPU 31)
+    * Each student group need to be allocated an equal amount of RAM. All students should be able to use all the RAM that has been allocated to them without issues
+    * Each student group need to be allocated the same amount of threads, the threads need to be mutually exclusive.
 
 * Do all these benchmarks run/use GPUs or are some of them solely CPU-centric?
     * 2 benchmarks do not use GPUs
@@ -205,6 +217,24 @@ Total Time  6332.38 s
     * No, you cannot comment out that line. The cgroups are used to emulate multiple users and force the 
     resources of each users to be clearly segregated, similar to what Slurm 
     does in a HPC cluster.
+
+* While running fp16 task versions the warning below are shown
+
+        Warning:  multi_tensor_applier fused unscale kernel is unavailable, possibly because apex was installed without --cuda_ext --cpp_ext. Using Python fallback.  Original ImportError was: ModuleNotFoundError("No module named 'amp_C'",)
+        Attempting to unscale a grad with type torch.cuda.HalfTensor Unscaling non-fp32 grads may indicate an error. When using Amp, you don't need to call .half() on your model.
+
+    * Those can be ignored
+
+* The report show duplicated benchmarks:
+    * It means you modified the script or the arguments and the version tag is different
+
+# ROcm Cache
+
+The cache is structured by default like so `.cache/miopen/2.1.0/<kernel_hash>/<compiled_kernel>*.cl.o`.
+We provide a zipped version of the miopen folder than you can unzip in your own cache location with the following command `unzip training/common/miopen.zip -d .cache/`.
+
+You can also copy over the performance database like so `cp training/common/gfx906_60.HIP.2_1_0.ufdb.txt ~/.config/miopen/`
+Note that the cache and database are version dependent.
 
 # Features
 

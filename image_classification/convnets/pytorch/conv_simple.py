@@ -1,4 +1,5 @@
 from perf import *
+from perf.fp16utils import OptimizerAdapter, ModelAdapter
 
 import torch
 import torch.nn as nn
@@ -7,7 +8,6 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
 
-from apex import amp
 import time
 
 # ----
@@ -15,7 +15,7 @@ parser = parser_base()
 parser.add_argument('data', metavar='DIR', help='path to dataset')
 parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet18')
 parser.add_argument('--lr', '--learning-rate', default=0.1, type=float, metavar='LR')
-parser.add_argument('--opt-level', type=str)
+parser.add_argument('--half', action='store_true', default=False)
 
 # ----
 exp = Experiment(__file__)
@@ -35,22 +35,15 @@ model = model.to(device)
 
 criterion = nn.CrossEntropyLoss().to(device)
 
-optimizer = torch.optim.SGD(
+optimizer = OptimizerAdapter(torch.optim.SGD(
     model.parameters(),
-    args.lr)
+    args.lr),
+    half=args.half,
+    dynamic_loss_scale=True
+)
 
 # ----
-model, optimizer = amp.initialize(
-    model,
-    optimizer,
-    enabled=args.opt_level != 'O0',
-    cast_model_type=None,
-    patch_torch_functions=True,
-    keep_batchnorm_fp32=None,
-    master_weights=None,
-    loss_scale="dynamic",
-    opt_level=args.opt_level
-)
+model = ModelAdapter(model, half=args.half)
 
 
 # ----
@@ -112,10 +105,7 @@ for epoch in range(args.repeat):
 
                 # compute gradient and do SGD step
                 optimizer.zero_grad()
-
-                with amp.scale_loss(loss, optimizer) as scaled_loss:
-                    scaled_loss.backward()
-
+                optimizer.backward(loss)
                 optimizer.step()
 
     exp.show_eta(epoch, t)

@@ -18,3 +18,4 @@ libhdf5-dev
 gfortran
 cmake
 virtualenv
+libopenmpi-dev
