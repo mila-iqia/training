@@ -230,11 +230,18 @@ To use it you can simply execute `copy_rocm_cache.sh`.
 
 # ROcm Cache
 
-The cache is structured by default like so `.cache/miopen/2.1.0/<kernel_hash>/<compiled_kernel>*.cl.o`.
-We provide a zipped version of the miopen folder than you can unzip in your own cache location with the following command `unzip training/common/miopen.zip -d .cache/`.
+ROCm cache is structured by default like so `.cache/miopen/2.1.0/<kernel_hash>/<compiled_kernel>*.cl.o`, and
+the performance database is located at `~/.config/miopen/gfx906_60.HIP.2_1_0.ufdb.txt`
 
-You can also copy over the performance database like so `cp training/common/gfx906_60.HIP.2_1_0.ufdb.txt ~/.config/miopen/`
-Note that the cache and database are version dependent.
+We provide a zipped version of the miopen cache folder and a copy of our performance database file than you can unzip in your own cache location to speed up the first run of the benchmark.
+
+```
+unzip training/common/miopen.zip -d .cache/
+
+cp training/common/gfx906_60.HIP.2_1_0.ufdb.txt ~/.config/miopen/
+```
+
+NB: the compile cache and performance database are both version dependent. It will only work if your version of MIOpen matches ours.
 
 # Features
 
