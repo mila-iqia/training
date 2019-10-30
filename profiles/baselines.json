@@ -205,7 +205,7 @@
       "--batch-size": 64,
       "--arch": "resnet101",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
-      "--workers": 8,
+      "--workers": 8
     },
     "cgroup": "student"
   },
