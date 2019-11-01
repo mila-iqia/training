@@ -7,6 +7,36 @@ Training Benchmarks
 
 * Tested on **python 3.6** with **pytorch 1.3**
 
+### Anaconda
+
+```bash
+$ sudo apt install git
+$ git clone https://github.com/mila-iqia/training.git
+$ cd training
+$ sudo apt install $(cat apt_packages)
+
+$ ./install_dependencies.sh
+# reload bash with anaconda
+$ exec bash
+$ conda activate mlperf
+$ ./install_python_dependencies.sh
+```
+
+* Execute the benchmarks
+
+```batch
+$ conda activate mlperf
+$ export BASE=~/data/
+$ ./run.sh --jobs fast.json
+
+$ cp baselines.json tweaked.json
+
+# modify tweaked.json to reflect the device capacity
+$ ./run.sh --jobs tweaked.json  # run the tweaked version
+```
+
+### VirtualEnv
+
 * Install dependencies
 ```bash
 $ sudo apt install git
@@ -15,7 +45,7 @@ $ cd training
 $ sudo apt install $(cat apt_packages)
 
 $ virtualenv ~/mlperf --python=python3.6
-$ source activate ~/mlperf/bin/activate
+$ source ~/mlperf/bin/activate
 
 $ python --version
 > Python 3.6.4
@@ -37,7 +67,7 @@ $ ./download_datasets.sh
 ```batch
 $ source activate ~/mlperf/bin/activate
 $ export BASE=~/data/
-$ ./run.sh --jobs baselines.json
+$ ./run.sh --jobs fast.json
 
 $ cp baselines.json tweaked.json
 
