@@ -13,13 +13,15 @@ Training Benchmarks
 $ sudo apt install git
 $ git clone https://github.com/mila-iqia/training.git
 $ cd training
-$ sudo apt install $(cat apt_packages)
 
 $ ./install_dependencies.sh
 # reload bash with anaconda
 $ exec bash
 $ conda activate mlperf
 $ ./install_python_dependencies.sh
+
+# Install pytorch
+$ conda install pytorch torchvision cudatoolkit=10.1 -c pytorch
 ```
 
 * Execute the benchmarks
@@ -27,6 +29,9 @@ $ ./install_python_dependencies.sh
 ```batch
 $ conda activate mlperf
 $ export BASE=~/data/
+
+$ ./cgroup_setup.sh
+$ ./download_datasets.sh
 $ ./run.sh --jobs fast.json
 
 $ cp baselines.json tweaked.json
@@ -67,6 +72,9 @@ $ ./download_datasets.sh
 ```batch
 $ source activate ~/mlperf/bin/activate
 $ export BASE=~/data/
+
+$ ./cgroup_setup.sh
+$ ./download_datasets.sh
 $ ./run.sh --jobs fast.json
 
 $ cp baselines.json tweaked.json
