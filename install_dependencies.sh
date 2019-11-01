@@ -21,4 +21,5 @@ if [ ! -f dependencies.cache ]; then
     touch dependencies.cache
 fi
 
+sudo apt-get update
 sudo apt-get install -y $(cat ${SCRIPT_PATH}/apt_packages)
