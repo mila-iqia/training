@@ -51,7 +51,7 @@ $ python --version
 > Python 3.6.4
 
 $ pip install -e common
-$ pip instal Cython
+$ pip install Cython
 $ pip install numpy
 $ pip install --no-deps -r requirements.txt
 $
@@ -133,7 +133,7 @@ Some prebuilt container can be found at [training-container][100]
 
 # Install & Generate the Singularity files
 > ./install_singularity.sh
-> cd signularity
+> cd singularity
 > python generate_container.py
 > singularity build rocm.simg Singularity.rocm
 > cd ..
