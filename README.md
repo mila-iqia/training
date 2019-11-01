@@ -47,6 +47,7 @@ $ ./run.sh --jobs tweaked.json  # run the tweaked version
 $ sudo apt install git
 $ git clone https://github.com/mila-iqia/training.git
 $ cd training
+$ sudo apt update
 $ sudo apt install $(cat apt_packages)
 
 $ virtualenv ~/mlperf --python=python3.6
