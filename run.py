@@ -39,7 +39,7 @@ excluded = set(opt.exclude.split(','))
 
 env = os.environ
 env['JOB_RUNNER'] = '1'
-env['JOB_FILE'] = opt.jobs.split('.')[0]
+env['JOB_FILE'] = opt.jobs.split('/')[-1].split('.')[0]
 
 cgroups = {
     'student': 'cpuset,memory:student',
