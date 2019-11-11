@@ -13,10 +13,12 @@ if [[ ! -f /sys/fs//cgroup/memory/student0/memory.limit_in_bytes ]]; then
 
     # Get the number of numa Nodes
     NODE_COUNT=$(ls -d /sys/devices/system/node/node* | wc -l)
+    # We will allow every student to allocate on all numa nodes and trust the
+    # OS to allocate intelligently.
     MEM_CONSTRAINT=$(ls -d /sys/devices/system/node/node* | grep -Po '[0-9].*' | awk '{print $1}' | paste -s -d, -)
 
     # -----------------------------
-    CPU_CONSTRAINT="0-$(($CPU_COUNT - 1))"
+    CPU_RANGE="0-$(($CPU_COUNT - 1))"
 
     # make users able to manage cgroup
     # so we can run cgcreate as user and not sudo later on
@@ -35,7 +37,7 @@ if [[ ! -f /sys/fs//cgroup/memory/student0/memory.limit_in_bytes ]]; then
 
     echo "Total Device $DEVICE_TOTAL"
     echo "Total Memory $RAM_CONSTRAINT / $RAM_TOTAL"
-    echo "Total CPU    $CPU_CONSTRAINT / $CPU_TOTAL"
+    echo "Total CPU    $CPU_RANGE / $CPU_TOTAL"
     echo "Total Numa   $MEM_CONSTRAINT"
 
     # Bound the resource for a student

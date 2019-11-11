@@ -10,17 +10,24 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dry', action='store_true', default=False)
-parser.add_argument('--jobs', type=str, default='fast.json', help='jobs definition file')
-parser.add_argument('--name', type=str, default=None, help='name of the job to run')
+parser.add_argument('--jobs', type=str, default='fast.json',
+                    help='jobs definition file')
+parser.add_argument('--name', type=str, default=None,
+                    help='name of the job to run')
 parser.add_argument('--show', action='store_true', default=False)
 parser.add_argument('--verbose', action='store_true', default=False)
-parser.add_argument('--exclude', type=str, default='', help='name of the experience to exclude')
+parser.add_argument('--exclude', type=str, default='',
+                    help='name(s) of the experiment(s) to exclude')
 
-parser.add_argument('--no-cgexec', action='store_true', help='do not execute inside a cgroup')
-parser.add_argument('--no-nocache', action='store_true', help='do not use nocache')
+parser.add_argument('--no-cgexec', action='store_true',
+                    help='do not execute inside a cgroup')
+parser.add_argument('--no-nocache', action='store_true',
+                    help='do not use nocache')
 
-parser.add_argument('--uid', type=int, default=0)
-parser.add_argument('--singularity', type=str, default=None, help='singularity image to use')
+parser.add_argument('--uid', type=int, default=0,
+                    help='run id')
+parser.add_argument('--singularity', type=str, default=None,
+                    help='singularity image to use')
 parser.add_argument('--raise-error', action='store_true', default=False)
 
 # This is not the way you want to do reproducible benchmarks

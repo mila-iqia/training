@@ -18,6 +18,8 @@ if [[ -z "${RESOURCE_COMPUTED}" ]]; then
 
     if [[ $DEVICE_TOTAL != 0 ]]; then
         export RAM_CONSTRAINT=$(($RAM_TOTAL / $DEVICE_TOTAL))
+        # Some CPUs may be left out if there is not a whole number of
+        # processors per GPU device, although the OS can make use of them.
         export CPU_COUNT=$(($CPU_TOTAL / $DEVICE_TOTAL))
     else
         export RAM_CONSTRAINT=$(($RAM_TOTAL / 8))

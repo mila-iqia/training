@@ -7,7 +7,8 @@ import argparse
 path = os.environ.get('OUTPUT_DIRECTORY', '/tmp')
 parser = argparse.ArgumentParser()
 parser.add_argument('--sequential', action='store_true', default=False)
-parser.add_argument('--singularity', type=str, default=None, help='singularity image to use')
+parser.add_argument('--singularity', type=str, default=None,
+                    help='singularity image to use')
 args, _ = parser.parse_known_args()
 
 
