@@ -56,7 +56,7 @@ $ source ~/mlperf/bin/activate
 $ python --version
 > Python 3.6.4
 
-$ pip install -e common
+$ pip install -e milabench
 $ pip install Cython
 $ pip install numpy
 $ pip install --no-deps -r requirements.txt

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from perf import *
+from milabench.perf import *
 
 import argparse
 import os

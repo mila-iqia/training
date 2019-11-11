@@ -1,5 +1,5 @@
 import os
-from perf import *
+from milabench.perf import *
 import time
 
 

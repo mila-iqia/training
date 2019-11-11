@@ -1,4 +1,4 @@
-from perf import *
+from milabench.perf import *
 
 import argparse
 import gym

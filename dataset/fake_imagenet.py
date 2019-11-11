@@ -3,7 +3,7 @@ import os
 import sys
 import multiprocessing
 from tqdm import tqdm
-from perf import *
+from milabench.perf import *
 
 from torchvision.datasets import FakeData
 

@@ -1,8 +1,6 @@
-git+git://github.com/Delaunay/apex@master#egg=apex
-git+git://github.com/Delaunay/pytorch-a2c-ppo-acktr@master#egg=a2c_ppo_acktr
-git+git://github.com/Delaunay/benchutils@master#egg=benchutils
-git+git://github.com/Delaunay/baselines.git
-git+git://github.com/Delaunay/reporting.git
+git+git://github.com/breuleux/apex@milatweak
+git+git://github.com/breuleux/pytorch-a2c-ppo-acktr@milatweak
+git+git://github.com/breuleux/baselines@milatweak
 absl-py==0.7.1
 astor==0.7.1
 atari-py==0.1.7
@@ -76,4 +74,3 @@ websocket-client==0.56.0
 werkzeug>=0.15.3
 wurlitzer==1.0.2
 zmq==0.0.0
-

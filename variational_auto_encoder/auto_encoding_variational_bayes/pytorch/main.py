@@ -1,5 +1,5 @@
 from __future__ import print_function
-from perf import *
+from milabench.perf import *
 
 import os
 import argparse

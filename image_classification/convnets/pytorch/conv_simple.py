@@ -1,4 +1,4 @@
-from perf import *
+from milabench.perf import *
 from perf.fp16utils import OptimizerAdapter, ModelAdapter
 
 import torch

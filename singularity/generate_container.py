@@ -8,7 +8,7 @@ From: {base_img}
 
     pip install --user --upgrade setuptools
 
-    pip install -e git+git://github.com/mila-iqia/training.git#egg=master\\&subdirectory=common
+    pip install -e git+git://github.com/mila-iqia/training.git#egg=master\\&subdirectory=milabench
     pip install Cython
 {pip_packages}
 
@@ -23,7 +23,7 @@ RUN apt-get -y install {apt_packages}
 
 RUN pip install --upgrade setuptools
 
-RUN pip install -e git+git://github.com/mila-iqia/training.git#egg=master\\&subdirectory=common
+RUN pip install -e git+git://github.com/mila-iqia/training.git#egg=master\\&subdirectory=milabench
 RUN pip install Cython
 {pip_packages}
 

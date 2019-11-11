@@ -7,7 +7,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from load import implicit_load
-from perf import *
+from milabench.perf import *
 # from mlperf_compliance import # mlperf_log
 
 

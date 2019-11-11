@@ -18,9 +18,9 @@ except:
 import argparse
 from argparse import Namespace
 
-import benchutils.arguments as bench_args
-from benchutils.versioning import get_file_version
-from benchutils.chrono import MultiStageChrono
+import ..benchutils.arguments as bench_args
+from ..benchutils.versioning import get_file_version
+from ..benchutils.chrono import MultiStageChrono
 
 import hashlib
 import socket

@@ -1,5 +1,5 @@
 # coding: utf-8
-from perf import *
+from milabench.perf import *
 
 import argparse
 import time

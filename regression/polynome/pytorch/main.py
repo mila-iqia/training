@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import print_function
-from perf import *
+from milabench.perf import *
 from itertools import count
 
 import torch
