@@ -18,7 +18,7 @@ $ ./install_dependencies.sh
 # reload bash with anaconda
 $ exec bash
 $ conda activate mlperf
-$ ./install_python_dependencies.sh
+$ pip install --no-deps -r requirements.txt
 
 # Install pytorch
 $ conda install pytorch torchvision cudatoolkit=10.1 -c pytorch

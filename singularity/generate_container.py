@@ -104,7 +104,7 @@ if generate_singularity:
         singularity_base,
         'ibmcom/powerai:1.5.4-all-ubuntu18.04-py3',
         apt_packages,
-        make_pip_install('../requirements_ppc.txt')
+        make_pip_install('../requirements.txt')
     )
 
 if generate_docker:
@@ -113,7 +113,7 @@ if generate_docker:
         docker_base,
         'ibmcom/powerai:1.5.4-all-ubuntu18.04-py3',
         apt_packages,
-        make_pip_install('../requirements_ppc.txt'),
+        make_pip_install('../requirements.txt'),
     )
 
 # NVIDIA
