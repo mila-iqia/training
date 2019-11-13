@@ -1,5 +1,5 @@
 from milabench.perf import *
-from perf.fp16utils import OptimizerAdapter, ModelAdapter
+from milabench.perf.fp16utils import OptimizerAdapter, ModelAdapter
 
 import torch
 import torch.nn as nn
