@@ -1,6 +1,6 @@
 from typing import *
 import os.path
-from benchutils.statstream import StatStream
+from .statstream import StatStream
 
 
 class UnEvenTable(Exception):

@@ -1,8 +1,8 @@
 import time
 import json
 
-from benchutils.statstream import StatStream
-from benchutils.report import print_table
+from .statstream import StatStream
+from .report import print_table
 
 from math import sqrt
 from math import log10

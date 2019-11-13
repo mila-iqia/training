@@ -1,5 +1,5 @@
 git+git://github.com/breuleux/apex@milatweak
-git+git://github.com/breuleux/pytorch-a2c-ppo-acktr@milatweak
+git+git://github.com/breuleux/pytorch-a2c-ppo-acktr-gail@milatweak
 git+git://github.com/breuleux/baselines@milatweak
 -e milabench
 absl-py==0.7.1
@@ -35,9 +35,6 @@ kiwisolver==1.0.1
 lockfile==0.12.2
 Markdown==3.1
 matplotlib==3.0.3
-mkl-fft==1.0.14
-mkl-random==1.1.0
-mkl-service==2.3.0
 mlperf-compliance==0.0.10
 mock==2.0.0
 mpi4py==3.0.1
