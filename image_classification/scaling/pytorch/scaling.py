@@ -1,7 +1,7 @@
 import sys
 import subprocess
 from argparse import ArgumentParser, REMAINDER
-from perf import *
+from milabench.perf import *
 import numpy as np
 
 
