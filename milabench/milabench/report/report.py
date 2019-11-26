@@ -176,7 +176,7 @@ weight_table = [
 
 def load_comparison_data():
     import os
-    import report
+    from milabench import report
     dirname = os.path.dirname(report.__file__)
     return pd.read_csv(f'{dirname}/data.csv', index_col='bench')
 
