@@ -31,16 +31,6 @@ import array
 from typing import *
 
 
-def get_arguments(parser, *args, **kwargs):
-
-    args = bench_args.get_arguments(parser, *args, **kwargs)
-    args.jr_id = os.environ.get('JOB_ID', 0)
-    args.vcd = os.environ.get('CUDA_VISIBLE_DEVICES', 0)
-    args.cpu_cores = int(os.environ.get('CPU_COUNT', 32))
-
-    return args
-
-
 MultiStageChrono = MultiStageChrono
 
 excluded_arguments = {
@@ -154,9 +144,51 @@ class Experiment:
         except:
             self.remote_logger = CMLExperimentMock()
 
-    def get_arguments(self, parser, *args, **kwargs):
-        self.args = get_arguments(parser, *args, **kwargs)
+    def get_arguments(self, parser, allow_unknown=False, show=True):
+        nproc = os.environ.get('PROC_COUNT')
+        if nproc is None:
+            nproc = 0
+
+        # Recurring arguments
+        parser.add_argument('--batch-size', '-b', type=int, help='batch size', default=1)
+        parser.add_argument('--cuda', action='store_true', dest='cuda', help='enable cuda', default=True)
+        parser.add_argument('--no-cuda', action='store_false', dest='cuda', help='disable cuda')
+        parser.add_argument('--workers', '-j', type=int, help='number of workers/processors to use', default=nproc)
+        parser.add_argument('--seed', '-s', type=int, help='seed to use', default=0)
+        parser.add_argument('--devices', type=int, help='number of device available', default=1)
+
+        # Insert Benchmark related arguments
+        parser.add_argument('--repeat', type=int, default=100, help='number of observation timed')
+        parser.add_argument('--number', type=int, default=10, help='number of time a task is done in between timer')
+        parser.add_argument('--report', type=str, default=None, help='file to store the benchmark result in')
+
+        # System Args
+        parser.add_argument('--jr_id', type=int, default=0)
+        parser.add_argument('--vcd', type=int, default=0)
+        parser.add_argument('--cpu-cores', type=int, default=0)
+
+        other_args = None
+        if not allow_unknown:
+            args = parser.parse_args()
+        else:
+            args, other_args = parser.parse_known_args()
+
+        # Insert system arguments
+        args.jr_id = os.environ.get('JOB_ID', 0)
+        args.vcd = os.environ.get('CUDA_VISIBLE_DEVICES', 0)
+        args.cpu_cores = int(os.environ.get('CPU_COUNT', 32))
+
+        self.args = args
         self._chrono = MultiStageChrono(name=self.name, skip_obs=self.skip_obs, sync=get_sync(self.args))
+
+        if show:
+            print('-' * 80)
+            for key, val in args.__dict__.items():
+                print('{:>30}: {}'.format(key, val))
+            print('-' * 80)
+
+        if allow_unknown:
+            return args, other_args
 
         return self.args
 
@@ -215,22 +247,6 @@ class Experiment:
 def parser_base(description=None, **kwargs):
     import os
     parser = argparse.ArgumentParser(description, **kwargs)
-
-    nproc = os.environ.get('PROC_COUNT')
-    if nproc is None:
-        nproc = 0
-
-    parser.add_argument('--batch-size', '-b', type=int, help='batch size', default=1)
-    parser.add_argument('--cuda', action='store_true', dest='cuda', help='enable cuda', default=True)
-    parser.add_argument('--no-cuda', action='store_false', dest='cuda', help='disable cuda')
-    parser.add_argument('--workers', '-j', type=int, help='number of workers/processors to use', default=nproc)
-    parser.add_argument('--seed', '-s', type=int, help='seed to use', default=0)
-    parser.add_argument('--devices', type=int, help='number of device available', default=1)
-
-    parser.add_argument('--jr_id', type=int, default=0)
-    parser.add_argument('--vcd', type=int, default=0)
-    parser.add_argument('--cpu-cores', type=int, default=0)
-
     return parser
 
 
