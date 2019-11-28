@@ -30,10 +30,10 @@ def get_network(net):
     segmentation_models = torchvision.models.segmentation.__dict__
 
     if net in classification_models:
-        return classification_models[net].cuda()
+        return classification_models[net]().cuda()
 
     if net in segmentation_models:
-        return segmentation_models[net].cuda()
+        return segmentation_models[net]().cuda()
 
     print("ERROR: not a supported model.")
     sys.exit(1)
@@ -127,7 +127,9 @@ def run_benchmarking(net, batch_size, iterations, run_fp16, dataparallel, distri
         'batch_time': time_per_batch,
         'speed': batch_size / time_per_batch
     }
-    json.dump(open(f'{tmp}/process_report_{rank}.json', 'w'), process_report)
+
+    with open(f'{tmp}/process_report_{rank}.json', 'w') as report:
+        json.dump(process_report, report)
 
     if rank == 0:
         overall_report = {
@@ -136,8 +138,8 @@ def run_benchmarking(net, batch_size, iterations, run_fp16, dataparallel, distri
             'batch_time': time_per_batch,
             'speed': batch_size * world_size / time_per_batch
         }
-        json.dump(open(f'{tmp}/overall_report.json', 'w'), overall_report)
-
+        with open(f'{tmp}/overall_report.json', 'w') as report:
+            json.dump(overall_report, report)
 
 
 def main():
