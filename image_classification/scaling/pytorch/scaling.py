@@ -127,3 +127,6 @@ def main():
     }
 
     exp.report(override=train_item)
+    
+if __name__ == '__main__':
+    main()
