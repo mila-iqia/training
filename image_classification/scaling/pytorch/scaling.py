@@ -27,6 +27,11 @@ def launch_distributed(script, args, other_args):
         cmd.extend(('--world-size', str(len(args.devices))))
         cmd.extend(('--dist-backend', 'nccl'))
         cmd.extend(('--dist-url', 'tcp://localhost:8181'))
+        cmd.extend(('--batch-size', str(args.batch_size)))
+        # Might be useful to throw IO into the mix with data loading
+        # cmd.extend(('--workers', str(args.workers)))
+        # cmd.extend(('--seed', str(args.seed)))
+        cmd.extend(('--number', str(args.number)))
         cmd.extend(other_args)
 
         process = subprocess.Popen(' '.join(cmd), env=job_env, shell=True)
