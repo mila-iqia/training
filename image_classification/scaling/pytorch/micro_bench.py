@@ -27,7 +27,10 @@ def weight_init(m):
 
 def get_network(net):
     classification_models = torchvision.models.__dict__
-    segmentation_models = torchvision.models.segmentation.__dict__
+    try:
+        segmentation_models = torchvision.models.segmentation.__dict__
+    except AttributeError:
+        segmentation_models = {}
 
     if net in classification_models:
         return classification_models[net]().cuda()
