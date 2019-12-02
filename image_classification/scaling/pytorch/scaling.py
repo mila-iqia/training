@@ -97,7 +97,7 @@ def main():
             speed_up = speed / speed1
 
             # with 8 GPUs the speed up should be close 8x
-            efficiency = world_size / speed_up
+            efficiency = speed_up / world_size
             all_efficiency.append(efficiency)
 
         results = np.array(all_efficiency)
@@ -111,7 +111,9 @@ def main():
             'unit': '%'
         }
 
-        exp.report(override=train_item)
+        exp.report(results={
+            'train_item': train_item
+        })
 
 
 if __name__ == '__main__':
