@@ -211,7 +211,17 @@ class Experiment:
         metric.append(val)
         self.remote_logger.log_metric(name, val)
 
-    def report(self):
+    def report(self, results=None):
+        """Generate a Json report of the trial
+
+        Arguments
+        ---------
+        results: dict
+            optional dictionary that provides additional metrics to be saved with the current experiment
+        """
+        if results is None:
+            results = {}
+
         make_report(
             self._chrono,
             self.args,
@@ -219,7 +229,8 @@ class Experiment:
             self.batch_loss_buffer,
             self.epoch_loss_buffer,
             {name: val.to_list() for name, val in self.metrics.items()},
-            self.remote_logger
+            self.remote_logger,
+            results=results
         )
 
     def get_device(self):
@@ -250,7 +261,7 @@ def parser_base(description=None, **kwargs):
     return parser
 
 
-def make_report(chrono: MultiStageChrono, args: Namespace, version: str, batch_loss: RingBuffer, epoch_loss: RingBuffer, metrics, remote_logger):
+def make_report(chrono: MultiStageChrono, args: Namespace, version: str, batch_loss: RingBuffer, epoch_loss: RingBuffer, metrics, remote_logger, results):
     if args is not None:
         args = args.__dict__
     else:
@@ -314,6 +325,8 @@ def make_report(chrono: MultiStageChrono, args: Namespace, version: str, batch_l
         }
 
         report_dict['train_item'] = train_item
+
+    report_dict.update(results)
 
     print('-' * 80)
     json_report = json.dumps(report_dict, sort_keys=True, indent=4, separators=(',', ': '))
