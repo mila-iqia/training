@@ -54,7 +54,7 @@ def main():
     args, other_args = exp.get_arguments(argunents(), show=True, allow_unknown=True)
     assert args.cuda, 'Need GPUs for this Benchmark'
 
-    device_count = int(args.devices)
+    device_count = int(args.devices) or torch.cuda.device_count()
     args.repeat = device_count
     _ = exp.get_device()
     chrono = exp.chrono()
@@ -112,7 +112,8 @@ def main():
         }
 
         exp.report(results={
-            'train_item': train_item
+            'train_item': train_item,
+            'efficiencies': all_efficiency
         })
 
 

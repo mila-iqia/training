@@ -248,10 +248,12 @@
     "name": "scaling",
     "cmd": "./image_classification/scaling/pytorch/run.sh",
     "args": {
-      "--repeat": 0,
+      "--repeat": 10,
       "--number": 10,
       "--network": "resnet101",
-      "--batch-size": 64
+      "--devices": 0,
+      "--batch-size": 128,
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE"
     },
     "cgroup": "all"
   }

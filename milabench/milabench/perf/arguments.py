@@ -308,8 +308,10 @@ def make_report(chrono: MultiStageChrono, args: Namespace, version: str, batch_l
     remote_logger.log_parameters(args)
     report_dict = chrono.to_dict(args)
 
+    report_dict.update(results)
+
     # train is the default name for batched stuff
-    if 'train' in report_dict:
+    if 'train' in report_dict and 'train_item' not in report_dict:
         train_data = report_dict['train']
 
         item_count = report_dict['batch_size'] * report_dict['number']
@@ -325,8 +327,6 @@ def make_report(chrono: MultiStageChrono, args: Namespace, version: str, batch_l
         }
 
         report_dict['train_item'] = train_item
-
-    report_dict.update(results)
 
     print('-' * 80)
     json_report = json.dumps(report_dict, sort_keys=True, indent=4, separators=(',', ': '))
