@@ -250,6 +250,8 @@ def main():
     parser.add_argument('--name', type=str, default='fast', help='name of the report to load')
     parser.add_argument('--show-comparison', action='store_true', default=False)
     parser.add_argument('--gpu-model', choices=['V100', 'MI50', 'RTX'], default=None)
+    parser.add_argument('--csv', type=str, default='',
+                        help='file to save the results in as CSV')
 
     args = parser.parse_args()
 
@@ -300,6 +302,11 @@ def main():
 
     print('--')
     df = df.ix[:, ('target', 'result', 'sd', 'sd%', 'diff')]
+
+    if args.csv:
+        with open(args.csv, 'w') as f:
+            f.write(df.to_csv())
+
     print(df)
     print('--')
 
