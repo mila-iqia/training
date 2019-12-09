@@ -151,29 +151,6 @@ def filer_report(rep, agg):
     return new_rep
 
 
-weight_table = [
-    ('atari'                   , (2.88, 26.5405955792167)),
-    ('cart'                    , (2.67, 7302.07868564706)),
-    ('convnet_distributed_fp16', (3.16, 787.612513885864)),
-    ('convnet_distributed'     , (2.97, 679.552350938073)),
-    ('convnet_fp16'            , (2.97, 1679.83933693595)),
-    ('convnet'                 , (2.79, 854.372140032470)),
-    ('dcgan_all'               , (2.97, 309.723619627068)),
-    ('dcgan'                   , (2.79, 953.948799476626)),
-    ('fast_style'              , (2.79, 1012.08893408226)),
-    ('loader'                  , (2.96, 7399.55789895996)),
-    ('recom'                   , (2.81, 74767.2559322286)),
-    ('reso'                    , (2.79, 1177.57382438524)),
-    ('ssd'                     , (2.79, 145.729436411335)),
-    ('toy_lstm'                , (2.67, 4.10197009223690)),
-    ('toy_reg'                 , (2.67, 1234013.49127685)),
-    ('translator'              , (2.78, 900.443830123957)),
-    ('vae'                     , (2.79, 27375.6153865499)),
-    ('wlmfp16'                 , (2.96, 22089.7959228754)),
-    ('wlm'                     , (2.78, 6487.87603739007)),
-]
-
-
 def load_comparison_data():
     import os
     from milabench import report
@@ -191,55 +168,6 @@ def show_perf(folder_name, report_name):
     df.loc[:, 'sd%'] = sd / df.loc[:, 'result']
 
     return df.loc[:, ('result', 'sd', 'sd%')]
-
-
-def compute_overall_score(df, col='result'):
-    final_report = {}
-    total = 0
-    wtotal = 0
-
-    for k, value in df[col].items():
-
-        for bk, (w, b) in weight_table:
-            if k.startswith(bk):
-                v = value * w / b
-                final_report[k] = v
-                total += v
-                wtotal += w
-                break
-
-    final_report['total'] = total / wtotal
-    return final_report
-
-
-def check_variance(df):
-
-    scores = []
-    for i in ['output2', 'output8', 'output1', 'output10', 'output4', 'output5',
-              'output9', 'output7', 'output6', 'output0', 'output3']:
-
-        report = compute_overall_score(df, col=i)
-        scores.append(report['total'])
-
-    scores = np.array(scores)
-    variance = scores.std() * 100 / scores.mean()
-
-    print(f'Mean: {scores.mean()}')
-    print(f'  SD: {scores.std()}')
-    print(f' SD%: {variance}')
-
-    # Results must be consistent
-    assert variance < 1
-    return scores
-
-
-def other(df):
-    report = compute_overall_score(df)
-    print(json.dumps(report, indent=2))
-
-    df.to_csv('report.csv')
-
-    check_variance(df)
 
 
 def main():
