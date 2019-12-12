@@ -4,7 +4,7 @@
     "cmd": "./regression/polynome/pytorch/run.sh",
     "args":{
       "--repeat": 20,
-      "--number": 100,
+      "--number": 1000,
       "--batch-size": 256,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": ""
@@ -15,7 +15,7 @@
     "name": "toy_lstm",
     "cmd": "./time_sequence_prediction/lstm/pytorch/run.sh",
     "args":{
-      "--repeat": 10,
+      "--repeat": 20,
       "--number": 5,
       "--dtype":  "float32",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
@@ -27,7 +27,7 @@
     "name": "vae",
     "cmd": "./variational_auto_encoder/auto_encoding_variational_bayes/pytorch/run.sh",
     "args":{
-      "--repeat": 50,
+      "--repeat": 100,
       "--number": 30,
       "--batch-size": 128,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
@@ -41,7 +41,7 @@
     "args":{
       "--data": "$DATA_DIRECTORY/ImageNet/train",
       "--workers": 8,
-      "--repeat": 15,
+      "--repeat": 30,
       "--number": 5,
       "--batch-size": 256,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
@@ -56,8 +56,8 @@
       "--upscale_factor": 2,
       "--batch-size": 64,
       "--testBatchSize": 8,
-      "--repeat": 25,
-      "--number": 5,
+      "--repeat": 50,
+      "--number": 20,
       "--workers": 8,
       "--lr": 0.1,
       "--no-checks": "",
@@ -70,7 +70,7 @@
     "name": "translator",
     "cmd": "./natural_language_processing/rnn_translator/pytorch/run.sh",
     "args":{
-      "--repeat": 15,
+      "--repeat": 20,
       "--number": 10,
       "--batch-size": 64,
       "--dataset-dir": "$DATA_DIRECTORY/wmt16",
@@ -85,7 +85,7 @@
     "name": "wlm",
     "cmd": "./natural_language_processing/word_language_model/pytorch/run.sh",
     "args":{
-      "--repeat": 15,
+      "--repeat": 30,
       "--number": 5,
       "--batch-size": 64,
       "--emsize":  656,
@@ -102,7 +102,7 @@
     "name": "wlmfp16",
     "cmd": "./natural_language_processing/word_language_model/pytorch/run_fp16.sh",
     "args":{
-      "--repeat": 15,
+      "--repeat": 30,
       "--number": 5,
       "--batch-size": 128,
       "--emsize":  656,
@@ -121,7 +121,7 @@
     "cmd": "./reinforcement/cart_pole/pytorch/run.sh",
     "args":{
       "--repeat": 200,
-      "--number": 500,
+      "--number": 1000,
       "--gamma": 0.99,
       "--log-interval": 10,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
@@ -133,11 +133,11 @@
     "name": "atari",
     "cmd": "./reinforcement/atari/pytorch/run.sh",
     "args":{
-      "--repeat": 15,
-      "--number": 5,
+      "--repeat": 30,
+      "--number": 10,
       "--env-name": "\"PongNoFrameskip-v4\"",
       "--num-steps": 128,
-      "--num-processes": 16,
+      "--num-processes": 8,
       "--algo": "ppo",
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--use-gae": "",
@@ -154,8 +154,8 @@
     "name": "ssd",
     "cmd": "./object_detection/single_stage_detector/pytorch/run.sh",
     "args":{
-      "--repeat": 15,
-      "--number": 5,
+      "--repeat": 30,
+      "--number": 10,
       "--batch-size": 128,
       "--no-save": "",
       "--workers": 8,
@@ -170,8 +170,8 @@
     "name": "fast_style",
     "cmd": "./fast_neural_style/neural_style/pytorch/run.sh",
     "args":{
-      "--repeat": 25,
-      "--number": 5,
+      "--repeat": 50,
+      "--number": 10,
       "--batch-size": 128,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--cuda": "",
@@ -186,8 +186,8 @@
       "--dataset": "imagenet",
       "--dataroot": "$DATA_DIRECTORY/ImageNet/train",
       "--imageSize": 64,
-      "--repeat": 25,
-      "--number": 5,
+      "--repeat": 50,
+      "--number": 10,
       "--batch-size":  128,
       "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
       "--workers": 8,
@@ -200,7 +200,7 @@
     "cmd": "./image_classification/convnets/pytorch/run.sh",
     "args":{
       "$DATA_DIRECTORY/ImageNet/train": "",
-      "--repeat": 15,
+      "--repeat": 30,
       "--number": 5,
       "--batch-size": 64,
       "--arch": "resnet101",
@@ -214,7 +214,7 @@
     "cmd": "./image_classification/convnets/pytorch/run.sh",
     "args":{
       "$DATA_DIRECTORY/ImageNet/train": "",
-      "--repeat": 15,
+      "--repeat": 20,
       "--number": 5,
       "--batch-size": 128,
       "--arch": "resnet101",
@@ -234,7 +234,7 @@
       "--layers": "256 256 128 64",
       "-f" : 64,
       "--threshold": 0.635,
-      "--processes": 4,
+      "--processes": 1,
       "--workers": 8,
       "--repeat": 25,
       "--number": 100,
@@ -245,15 +245,50 @@
     "cgroup": "student"
   },
   {
-    "name": "scaling",
-    "cmd": "./image_classification/scaling/pytorch/run.sh",
-    "args": {
-      "--repeat": 10,
-      "--number": 10,
-      "--network": "resnet101",
-      "--devices": 0,
+    "name": "convnet_distributed",
+    "cmd": "./image_classification/convnets/pytorch/run_distributed.sh",
+    "args":{
+      "$DATA_DIRECTORY/ImageNet/train": "",
+      "--repeat": 30,
+      "--number": 5,
+      "--batch-size": 64,
+      "--workers": 8,
+      "--arch": "resnet101",
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": ""
+    },
+    "cgroup": "all"
+  },
+  {
+    "name": "convnet_distributed_fp16",
+    "cmd": "./image_classification/convnets/pytorch/run_distributed.sh",
+    "args":{
+      "$DATA_DIRECTORY/ImageNet/train": "",
+      "--repeat": 30,
+      "--number": 5,
       "--batch-size": 128,
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE"
+      "--workers": 8,
+      "--arch": "resnet101",
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--cuda": "",
+      "--half":  ""
+    },
+    "cgroup": "all"
+  },
+  {
+    "name": "dcgan_all",
+    "cmd": "./generative_adversarial_networks/dcgan/pytorch/run.sh",
+    "args":{
+      "--dataset": "imagenet",
+      "--dataroot": "$DATA_DIRECTORY/ImageNet/train",
+      "--imageSize": 64,
+      "--repeat": 50,
+      "--number": 10,
+      "--batch-size": 128,
+      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--workers": 8,
+      "--ngpu": "$DEVICE_TOTAL",
+      "--cuda": ""
     },
     "cgroup": "all"
   }
