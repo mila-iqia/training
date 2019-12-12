@@ -40,10 +40,8 @@ parser.add_argument('--free-for-all', action='store_true', default=False,
 
 cpu_count = multiprocessing.cpu_count()
 device_count = torch.cuda.device_count()
-path = os.environ.get('OUTPUT_DIRECTORY', '/tmp')
 
 opt = parser.parse_args()
-experiment = open(f'{path}/summary.txt', 'a')
 
 excluded = set(opt.exclude.split(','))
 
@@ -210,8 +208,6 @@ def run_job_def(jid, definition, name=None, size=19):
                 raise e
 
         print(msg)
-        experiment.write(msg)
-        experiment.flush()
 
 
 def run_job_file(name):
@@ -231,8 +227,6 @@ def run_job_file(name):
 
     msg = f'Total Time {time.time() - start_all:8.2f} s\n'
     print(msg)
-    experiment.write(msg)
-    experiment.close()
 
 
 if __name__ == '__main__':
