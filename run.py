@@ -7,9 +7,12 @@ import traceback
 import multiprocessing
 import torch
 import argparse
+from milabench.perf.arguments import write_report
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dry', action='store_true', default=False)
+parser.add_argument('--outdir', type=str, default='',
+                    help='output directory for the results')
 parser.add_argument('--jobs', type=str, default='fast.json',
                     help='jobs definition file')
 parser.add_argument('--name', type=str, default=None,
@@ -47,6 +50,9 @@ excluded = set(opt.exclude.split(','))
 env = os.environ
 env['JOB_RUNNER'] = '1'
 env['JOB_FILE'] = opt.jobs.split('/')[-1].split('.')[0]
+env['SUITE_NAME'] = env['JOB_FILE']
+env['OUTPUT_DIRECTORY_2'] = opt.outdir
+os.makedirs(opt.outdir, exist_ok=True)
 
 cgroups = {
     'student': 'cpuset,memory:student',
@@ -125,19 +131,16 @@ def run_job(cmd, config, group, name):
         processes.append(subprocess.Popen(f'JOB_ID={i} CUDA_VISIBLE_DEVICES={i} {exec_cmd}', env=env, shell=True))
 
     exceptions = []
-    for process in processes:
+    for device_id, process in enumerate(processes):
         try:
             return_code = process.wait()
 
             if return_code != 0:
-                exceptions.append(return_code)
+                exceptions.append((device_id, return_code))
 
         except Exception as e:
             process.kill()
-            exceptions.append(e)
-
-            if opt.raise_error:
-                raise e
+            exceptions.append((device_id, e))
 
     if len(exceptions) > 0:
         raise JobRunnerException(exceptions, device_count)
@@ -178,6 +181,15 @@ def run_job_def(jid, definition, name=None, size=19):
 
             msg = f'{progress}[{failed:2d}/{total:2d}] FAILED | {(time.time() - s) / 60:8.2f} MIN | {cmd}\n'
 
+            for device_id, exc in e.exceptions:
+                write_report({
+                    'completed': False,
+                    'suite': env['SUITE_NAME'],
+                    'name': opt.name,
+                    'run_id': opt.uid,
+                    'vcd': str(device_id),
+                }, print_report=True)
+
             if opt.raise_error:
                 raise e
 
@@ -185,6 +197,14 @@ def run_job_def(jid, definition, name=None, size=19):
             traceback.print_exc()
             print(' ' * 4 * 3, cmd)
             msg = f'{progress}[  /  ] FAILED | {(time.time() - s) / 60:8.2f} MIN | {cmd}\n'
+
+            write_report({
+                'completed': False,
+                'suite': env['SUITE_NAME'],
+                'name': opt.name,
+                'run_id': opt.uid,
+                'vcd': ','.join([str(i) for i in range(device_count)]),
+            }, print_report=True)
 
             if opt.raise_error:
                 raise e

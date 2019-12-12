@@ -22,6 +22,7 @@ from ..benchutils import arguments as bench_args
 from ..benchutils.versioning import get_file_version
 from ..benchutils.chrono import MultiStageChrono
 
+from datetime import datetime
 import hashlib
 import socket
 import os
@@ -177,9 +178,14 @@ class Experiment:
         args.jr_id = os.environ.get('JOB_ID', 0)
         args.vcd = os.environ.get('CUDA_VISIBLE_DEVICES', 0)
         args.cpu_cores = int(os.environ.get('CPU_COUNT', 32))
+        args.start_time = datetime.utcnow().ctime()
 
         self.args = args
-        self._chrono = MultiStageChrono(name=self.name, skip_obs=self.skip_obs, sync=get_sync(self.args))
+        self._chrono = MultiStageChrono(
+            name=self.name,
+            skip_obs=self.skip_obs,
+            sync=get_sync(self.args)
+        )
 
         if show:
             print('-' * 80)
@@ -261,7 +267,36 @@ def parser_base(description=None, **kwargs):
     return parser
 
 
-def make_report(chrono: MultiStageChrono, args: Namespace, version: str, batch_loss: RingBuffer, epoch_loss: RingBuffer, metrics, remote_logger, results):
+def write_report(report, print_report=True):
+    outdir = os.environ.get('OUTPUT_DIRECTORY_2')
+    suite_name = report.get('suite', 'X')
+    bench_name = report.get('name', 'X')
+    run_id = report.get('run_id', 'X')
+    device_id = report.get('vcd', 'X')
+    passfail = '.' if report.get('completed', True) else '.FAIL.'
+    timestamp = datetime.utcnow().strftime(r'%Y%m%d-%H%M%S-%f')
+    filename = os.path.join(
+        outdir,
+        f'{suite_name}.{bench_name}.R{run_id}.D{device_id}{passfail}{timestamp}.json'
+    )
+    json_report = json.dumps(
+        report, sort_keys=True, indent=4, separators=(',', ': ')
+    )
+    if print_report:
+        print('-' * 80)
+        print(json_report)
+    with open(filename, 'w') as file:
+        print(json_report, file=file)
+
+
+def make_report(chrono: MultiStageChrono,
+                args: Namespace,
+                version: str,
+                batch_loss: RingBuffer,
+                epoch_loss: RingBuffer,
+                metrics,
+                remote_logger,
+                results):
     if args is not None:
         args = args.__dict__
     else:
@@ -301,6 +336,9 @@ def make_report(chrono: MultiStageChrono, args: Namespace, version: str, batch_l
     args['epoch_loss'] = epoch_loss.to_list()
     args['metrics'] = metrics
     args['run_id'] = os.getenv('RUN_ID', 0)
+    args['suite'] = os.getenv('SUITE_NAME', '???')
+    args['end_time'] = datetime.utcnow().ctime()
+    args.setdefault('completed', True)
 
     for excluded in excluded_arguments:
         args.pop(excluded, None)
@@ -328,19 +366,25 @@ def make_report(chrono: MultiStageChrono, args: Namespace, version: str, batch_l
 
         report_dict['train_item'] = train_item
 
-    print('-' * 80)
-    json_report = json.dumps(report_dict, sort_keys=True, indent=4, separators=(',', ': '))
-    print(json_report)
+    outdir = os.environ.get('OUTPUT_DIRECTORY_2')
+    if outdir is not None:
+        write_report(report_dict, print_report=True)
 
-    if not os.path.exists(filename):
-        report_file = open(filename, 'w')
-        report_file.write('[')
+    else:
+        print('-' * 80)
+        json_report = json.dumps(
+            report_dict, sort_keys=True, indent=4, separators=(',', ': ')
+        )
+        print(json_report)
+        if not os.path.exists(filename):
+            report_file = open(filename, 'w')
+            report_file.write('[')
+            report_file.close()
+
+        report_file = open(filename, 'a')
+        report_file.write(json_report)
+        report_file.write(',')
         report_file.close()
-
-    report_file = open(filename, 'a')
-    report_file.write(json_report)
-    report_file.write(',')
-    report_file.close()
 
     print('-' * 80)
 
