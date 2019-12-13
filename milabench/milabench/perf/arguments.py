@@ -298,7 +298,7 @@ def make_report(chrono: MultiStageChrono,
                 remote_logger,
                 results):
     if args is not None:
-        args = args.__dict__
+        args = dict(args.__dict__)
     else:
         args = {}
 

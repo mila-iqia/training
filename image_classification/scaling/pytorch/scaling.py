@@ -69,14 +69,15 @@ def main():
 
             rc = launch_distributed(script, args, other_args)
 
-            assert rc == 0, 'Failed to run distributed script'
+            if rc == 0:
+                report = json.load(open(f'{tmp}/overall_report.json', 'r'))
+                world_size = report['world_size']
+                speed = report['speed']
 
-            report = json.load(open(f'{tmp}/overall_report.json', 'r'))
-            world_size = report['world_size']
-            speed = report['speed']
-
-            assert i + 1 == world_size
-            scaling.append((world_size, speed))
+                assert i + 1 == world_size
+                scaling.append((world_size, speed))
+            else:
+                scaling.append((i + 1, False))
 
         exp.show_eta(i, t)
 
@@ -87,34 +88,32 @@ def main():
     world_size1, speed1 = scaling[0]
     assert world_size1 == 1
 
-    if len(scaling) == 1:
-        print('No Multi GPU cannot compute GPU scaling')
-        print(json.dumps(report, indent=2))
-    else:
-        all_efficiency = []
-
-        for world_size, speed in scaling[1:]:
+    for world_size, speed in scaling:
+        vcd = ','.join(map(str, range(world_size)))
+        if speed is False:
+            exp.report(results={
+                'completed': False,
+                'vcd': vcd,
+                'train_item': {},
+            })
+        else:
             speed_up = speed / speed1
-
-            # with 8 GPUs the speed up should be close 8x
             efficiency = speed_up / world_size
-            all_efficiency.append(efficiency)
+            exp.report(results={
+                'completed': True,
+                'train_item': {
+                    'avg': efficiency,
+                    'max': efficiency,
+                    'min': efficiency,
+                    'range': 0,
+                    'sd': 0,
+                    'unit': '%',
+                },
+                'vcd': vcd,
+            })
 
-        results = np.array(all_efficiency)
-
-        train_item = {
-            'avg': results.mean(),
-            'max': results.max(),
-            'min': results.min(),
-            'range': results.max() - results.min(),
-            'sd': results.std(),
-            'unit': '%'
-        }
-
-        exp.report(results={
-            'train_item': train_item,
-            'efficiencies': all_efficiency
-        })
+    if any(speed is False for world_size, speed in scaling):
+        sys.exit(1)
 
 
 if __name__ == '__main__':
