@@ -49,7 +49,7 @@ env = os.environ
 env['JOB_RUNNER'] = '1'
 env['JOB_FILE'] = opt.jobs.split('/')[-1].split('.')[0]
 env['SUITE_NAME'] = env['JOB_FILE']
-env['OUTPUT_DIRECTORY_2'] = opt.outdir
+env['OUTPUT_DIRECTORY'] = opt.outdir
 os.makedirs(opt.outdir, exist_ok=True)
 
 cgroups = {
@@ -180,7 +180,7 @@ def run_job_def(jid, definition, name=None, size=19):
             msg = f'{progress}[{failed:2d}/{total:2d}] FAILED | {(time.time() - s) / 60:8.2f} MIN | {cmd}\n'
 
             for device_id, exc in e.exceptions:
-                write_report({
+                write_report(opt.outdir, {
                     'completed': False,
                     'suite': env['SUITE_NAME'],
                     'name': opt.name,
@@ -196,7 +196,7 @@ def run_job_def(jid, definition, name=None, size=19):
             print(' ' * 4 * 3, cmd)
             msg = f'{progress}[  /  ] FAILED | {(time.time() - s) / 60:8.2f} MIN | {cmd}\n'
 
-            write_report({
+            write_report(opt.outdir, {
                 'completed': False,
                 'suite': env['SUITE_NAME'],
                 'name': opt.name,

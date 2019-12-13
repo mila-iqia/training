@@ -6,7 +6,7 @@
       "--repeat": 20,
       "--number": 100,
       "--batch-size": 256,
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--cuda": ""
     },
     "cgroup": "student"
@@ -18,7 +18,7 @@
       "--repeat": 10,
       "--number": 5,
       "--dtype":  "float32",
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--cuda": ""
     },
     "cgroup": "student"
@@ -30,7 +30,7 @@
       "--repeat": 50,
       "--number": 30,
       "--batch-size": 128,
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--cuda": ""
     },
     "cgroup": "student"
@@ -44,7 +44,7 @@
       "--repeat": 15,
       "--number": 5,
       "--batch-size": 256,
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--cuda": ""
     },
     "cgroup": "student"
@@ -61,7 +61,7 @@
       "--workers": 8,
       "--lr": 0.1,
       "--no-checks": "",
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--cuda": ""
     },
     "cgroup": "student"
@@ -76,7 +76,7 @@
       "--dataset-dir": "$DATA_DIRECTORY/wmt16",
       "--target-bleu": 21.80,
       "--epochs": 8,
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--cuda": ""
     },
     "cgroup": "student"
@@ -93,7 +93,7 @@
       "--dropout": 0.5,
       "--epochs": 5,
       "--model": "GRU",
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--cuda": ""
     },
     "cgroup": "student"
@@ -110,7 +110,7 @@
       "--dropout": 0.5,
       "--epochs": 5,
       "--model": "GRU",
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--cuda": "",
       "--fp16": ""
     },
@@ -124,7 +124,7 @@
       "--number": 500,
       "--gamma": 0.99,
       "--log-interval": 10,
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--no-cuda": ""
     },
     "cgroup": "student"
@@ -139,7 +139,7 @@
       "--num-steps": 128,
       "--num-processes": 16,
       "--algo": "ppo",
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--use-gae": "",
       "--clip-param": 0.1,
       "--value-loss-coef": 0.5,
@@ -161,7 +161,7 @@
       "--workers": 8,
       "--data": "${DATA_DIRECTORY}/coco",
       "--threshold": 0.212,
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--cuda": ""
     },
     "cgroup": "student"
@@ -173,7 +173,7 @@
       "--repeat": 25,
       "--number": 5,
       "--batch-size": 128,
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--cuda": "",
       "--workers": 8
     },
@@ -189,7 +189,7 @@
       "--repeat": 25,
       "--number": 5,
       "--batch-size":  128,
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--workers": 8,
       "--cuda": ""
     },
@@ -204,7 +204,7 @@
       "--number": 5,
       "--batch-size": 64,
       "--arch": "resnet101",
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--workers": 8
     },
     "cgroup": "student"
@@ -218,7 +218,7 @@
       "--number": 5,
       "--batch-size": 128,
       "--arch": "resnet101",
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--workers": 8,
       "--cuda": "",
       "--half": ""
@@ -239,7 +239,7 @@
       "--repeat": 25,
       "--number": 100,
       "--batch-size": 2048,
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE",
+      "--report": "$OUTPUT_DIRECTORY",
       "--cuda": ""
     },
     "cgroup": "student"
@@ -253,7 +253,7 @@
       "--network": "resnet101",
       "--devices": 0,
       "--batch-size": 128,
-      "--report": "$OUTPUT_DIRECTORY/$JOB_FILE"
+      "--report": "$OUTPUT_DIRECTORY"
     },
     "cgroup": "all"
   }

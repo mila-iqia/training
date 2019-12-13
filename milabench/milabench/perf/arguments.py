@@ -36,7 +36,7 @@ MultiStageChrono = MultiStageChrono
 
 excluded_arguments = {
     'report',
-    'seed'
+    # 'seed'
 }
 
 not_parameter = {
@@ -267,8 +267,7 @@ def parser_base(description=None, **kwargs):
     return parser
 
 
-def write_report(report, print_report=True):
-    outdir = os.environ.get('OUTPUT_DIRECTORY_2')
+def write_report(outdir, report, print_report=True):
     suite_name = report.get('suite', 'X')
     bench_name = report.get('name', 'X')
     run_id = report.get('run_id', 'X')
@@ -285,6 +284,7 @@ def write_report(report, print_report=True):
     if print_report:
         print('-' * 80)
         print(json_report)
+        print('-' * 80)
     with open(filename, 'w') as file:
         print(json_report, file=file)
 
@@ -303,11 +303,9 @@ def make_report(chrono: MultiStageChrono,
         args = {}
 
     if args['report'] is None:
-        args['report'] = os.environ.get('REPORT_PATH')
-
-    filename = args['report']
-    # Each GPU has its report we will consolidate later
-    filename = f'{filename}_{args["jr_id"]}.json'
+        outdir = os.environ.get('OUTPUT_DIRECTORY')
+    else:
+        outdir = args['report']
 
     args['version'] = version
 
@@ -366,27 +364,7 @@ def make_report(chrono: MultiStageChrono,
 
         report_dict['train_item'] = train_item
 
-    outdir = os.environ.get('OUTPUT_DIRECTORY_2')
-    if outdir is not None:
-        write_report(report_dict, print_report=True)
-
-    else:
-        print('-' * 80)
-        json_report = json.dumps(
-            report_dict, sort_keys=True, indent=4, separators=(',', ': ')
-        )
-        print(json_report)
-        if not os.path.exists(filename):
-            report_file = open(filename, 'w')
-            report_file.write('[')
-            report_file.close()
-
-        report_file = open(filename, 'a')
-        report_file.write(json_report)
-        report_file.write(',')
-        report_file.close()
-
-    print('-' * 80)
+    write_report(outdir, report_dict, print_report=True)
 
 
 def get_gpu_name():
