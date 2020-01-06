@@ -25,8 +25,10 @@ glfw==1.7.1
 grpcio==1.19.0
 gym==0.12.1
 h5py==2.9.0
+hrepr==0.2.3
 idna==2.8
 imageio==2.5.0
+jinja2==2.10.3
 joblib==0.13.2
 jsonschema==3.0.1
 Keras-Applications==1.0.7
@@ -34,6 +36,7 @@ Keras-Preprocessing==1.0.9
 kiwisolver==1.0.1
 lockfile==0.12.2
 Markdown==3.1
+MarkupSafe==1.1.1
 matplotlib==3.0.3
 mlperf-compliance==0.0.10
 mock==2.0.0
