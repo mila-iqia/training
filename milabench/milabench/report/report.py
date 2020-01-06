@@ -29,16 +29,19 @@ def load_comparison_data2(gpu_model):
 
 
 def read_results(report_name):
-    str_report = open(report_name, 'r').read().strip()[:-1]
-    if not str_report.endswith(']'):
+    str_report = open(report_name, 'r').read().strip()
+    if str_report.startswith('[') and str_report.endswith(','):
+        str_report = str_report[:-1]
         str_report += ']'
-    return json.loads(str_report)
+        return json.loads(str_report)
+    else:
+        return [json.loads(str_report)]
 
 
 def extract_reports(report_folder, report_names='baselines'):
     filenames = chain(
-        glob.glob(f'{report_folder}/**/{report_names}_*.json'),
-        glob.glob(f'{report_folder}/{report_names}_*.json')
+        glob.glob(f'{report_folder}/**/{report_names}[_.]*.json'),
+        glob.glob(f'{report_folder}/{report_names}[_.]*.json')
     )
     reports = defaultdict(list)
     for filename in filenames:
@@ -52,13 +55,26 @@ def extract_reports(report_folder, report_names='baselines'):
     return reports
 
 
-def _report_nans(reports):
-    nans = []
+def _report_nans(reports, nans=None):
+    nans = [] if nans is None else nans
     for name, entries in reports.items():
         for entry in entries:
             if any(math.isnan(x) for x in entry['batch_loss']):
+                entry['failure'] = 'A nan was found in batch_loss'
+                entries.remove(entry)
                 nans.append(entry)
     return nans
+
+
+def _report_failures(reports, fails=None):
+    fails = [] if fails is None else fails
+    for name, entries in reports.items():
+        for entry in list(entries):
+            if 'completed' in entry and not entry['completed']:
+                entry['failure'] = 'The test did not complete'
+                entries.remove(entry)
+                fails.append(entry)
+    return fails
 
 
 def _report_pergpu(baselines, reports, measure='mean'):
@@ -103,6 +119,10 @@ td, th {
 }
 .result-FAIL {
     color: red;
+    font-weight: bold;
+}
+.score, .rpp {
+    color: blue;
     font-weight: bold;
 }
 """)
@@ -261,16 +281,23 @@ def main():
                         help='file in which to save the report')
     parser.add_argument('--title', type=str, default='',
                         help='title for the report')
+    parser.add_argument('--price', type=float, default=0,
+                        help='total price')
+    parser.add_argument('--gputotal', type=int, default=0,
+                        help='total number of gpus to deliver')
 
     args = parser.parse_args()
 
     reports = extract_reports(args.reports, args.jobs)
+    nreports = sum(len(entries) for entries in reports.values())
 
-    # Nan check
-    nans = _report_nans(reports)
-    for nan in nans:
-        print(f'nan found in batch loss for test "{name}"',
-              f'in file {entry["__path__"]}')
+    failures = []
+
+    # Fail check
+    _report_failures(reports, failures)
+    _report_nans(reports, failures)
+
+    nfailures = len(failures)
 
     baselines = load_comparison_data2(args.gpu_model)
 
@@ -310,6 +337,27 @@ def main():
         stdout_display=outd,
     )
 
+    fail_ratio = nfailures / nreports
+    fail_criterion = fail_ratio <= 0.01
+
+    if failures:
+        fail_crit_pf = passfail(fail_criterion)
+
+        _display_title(title='Failures', file=html, stdout_display=outd)
+
+        ratio = nfailures / nreports
+        msg = f'{nfailures} failures / {nreports} results ({fail_ratio:.2%})'
+        print(msg, '--', fail_crit_pf)
+        print()
+        print(H.div(msg, " ", H.span[f'result-{fail_crit_pf}'](fail_crit_pf)),
+              file=html)
+        print(H.br(), file=html)
+
+        for entry in failures:
+            message = f'Failure in {entry["__path__"]}: {entry["failure"]}'
+            print(message)
+            print(H.div(message), file=html)
+
     _display_title(title='Global performance', file=html, stdout_display=outd)
 
     try:
@@ -319,46 +367,73 @@ def main():
     perf = (df_perf['perf'].prod()) ** (1/df_perf['perf'].count())
     minreq = 0.9
     success = perf > minreq
-    grade = (df_global['perf_pass'].sum()
-             + df_global['sd%_pass'].sum()
-             + success)
-    expected = 63
-    grade_success = grade == expected
+
+    pm = df_global['perf_pass'].sum() / df_global['perf_pass'].count()
+    st = df_global['sd%_pass'].sum() / df_global['sd%_pass'].count()
+    xpm = 2 * pm
+    xperf = 5 * perf
+    xst = 1 * st
+    grade = fail_criterion * (xpm + xst + xperf)
+    grade_success = True
+    if args.price:
+        if grade > 0:
+            rpp = args.price / grade
+            rpp = f'{rpp:.2f}'
+        else:
+            rpp = 'n/a'
+    else:
+        rpp = 'n/a'
 
     if outd:
-        print(f'Mean performance (geometric mean): {perf:.2f}')
-        print(f'Minimum required:                  {minreq:.2f}')
-        print(f'Mean performance (pass or fail):   {passfail(success)}')
-        print(f'Grade:                             {grade}/{expected}')
-        print(f'Pass or fail (final):              {passfail(grade_success)}')
+        print(f'Well functioning score (BF):     {fail_criterion:.2f}')
+        print(f'Minimal performance score (PM):  {pm:.2f}')
+        print(f'Standard deviation score (ST):   {st:.2f}')
+        print(f'Mean performance (geomean) (PG): {perf:.2f}')
+        print(f'Score (BF(2PM + ST + 5PG)):      {grade:.2f}')
+        if args.price:
+            print(f'Price:                           ${args.price:.2f}')
+            print(f'RPP (Price/Score):               {rpp}')
 
     if html:
         tb = H.table(
             H.tr(
-                H.th('Mean performance (geometric mean)'),
+                H.th('Well functioning score (BF)'),
+                H.td(f'{fail_criterion:.2f}'),
+            ),
+            H.tr(
+                H.th('Minimal performance score (PM)'),
+                H.td(f'{pm:.2f}'),
+            ),
+            H.tr(
+                H.th('Standard deviation score (ST)'),
+                H.td(f'{st:.2f}'),
+            ),
+            H.tr(
+                H.th('Mean performance (geomean) (PG)'),
                 H.td(f'{perf:.2f}'),
             ),
             H.tr(
-                H.th('Minimum required'),
-                H.td(f'{minreq:.2f}'),
-            ),
-            H.tr(
-                H.th('Mean performance (pass or fail)'),
-                H.td[f'result-{passfail(success)}'](passfail(success)),
-            ),
-            H.tr(
-                H.th('Grade'),
-                H.td[f'result-{passfail(grade_success)}'](
-                    f'{grade}/{expected}'
-                ),
-            ),
-            H.tr(
-                H.th('Pass or fail (final)'),
-                H.td[f'result-{passfail(grade_success)}'](
-                    passfail(grade_success)
+                H.th('Score (BF(2PM + ST + 5PG))'),
+                H.td[f'XXresult-{passfail(grade_success)}']['score'](
+                    f'{grade:.2f}'
                 ),
             ),
         )
+        if args.price:
+            tb = tb(
+                H.tr(
+                    H.th('Price'),
+                    H.td(
+                        H.span['price'](f'${args.price:.2f}')
+                    ),
+                ),
+                H.tr(
+                    H.th('RPP (Price/Score)'),
+                    H.td[f'XXresult-{passfail(grade_success)}'](
+                        H.span['rpp'](f'{rpp}')
+                    ),
+                ),
+            )
         print(tb, file=html)
 
     for measure in ['mean', 'min', 'max']:
