@@ -1,3 +1,11 @@
+
+NOTE
+====
+
+This README is being adjusted, please wait for this message to disappear before following any instructions. (2020/01/06)
+
+
+
 Training Benchmarks
 ===================
 
