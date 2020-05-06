@@ -24,7 +24,7 @@ def load_comparison_data2(gpu_model):
     import os
     from milabench import report
     dirname = os.path.dirname(report.__file__)
-    return pd.read_csv(f'{dirname}/target_{gpu_model}.csv',
+    return pd.read_csv(f'{dirname}/target_{gpu_model.lower()}.csv',
                        index_col='bench')
 
 
