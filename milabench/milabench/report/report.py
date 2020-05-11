@@ -95,6 +95,10 @@ def _report_pergpu(baselines, reports, measure='mean'):
                for device, data in device_results.items()}
         for name, device_results in results.items()
     }
+    results = {
+        k: v for k, v in
+        sorted(results.items(), key=lambda x: x[0] or "_")
+    }
 
     df = DataFrame(results).transpose()
     df = df.reindex(columns=all_devices)
@@ -209,7 +213,11 @@ def _report_global(baselines, reports):
                 'mean': Series(x['train_item']['avg'] for x in entries).mean(),
                 'sd': Series(x['train_item']['avg'] for x in entries).std(),
             }
-            for name, entries in reports.items()
+            for name, entries in sorted(
+                reports.items(),
+                key=lambda x: x[0] or "_"
+            )
+            if isinstance(name, str)
         }
     ).transpose()
     df['target'] = baselines['target']
