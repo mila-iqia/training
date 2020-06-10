@@ -2,9 +2,11 @@
 
 set -e
 
-# if SUDO is not defined use standard sudo
-if [[ -z "${SUDO}" ]]; then
+# if user is not root use standard sudo
+if [[ "$EUID" -ne 0 ]]; then
     export SUDO="sudo"
+else
+    export SUDO=""
 fi
 
 if [[ ! -f /sys/fs//cgroup/memory/student0/memory.limit_in_bytes ]]; then
