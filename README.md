@@ -1,4 +1,10 @@
 
+
+**IMPORTANT: This repository is deprecated.**
+
+**The benchmarks are now located at: https://github.com/mila-iqia/milabench**
+
+
 # Training Benchmarks
 
 * Tested on **python 3.6** with **pytorch 1.3**
