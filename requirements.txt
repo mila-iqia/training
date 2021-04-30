@@ -70,7 +70,7 @@ smmap2==2.0.5
 termcolor==1.1.0
 tqdm==4.31.1
 typing==3.6.6
-urllib3==1.25.6
+urllib3==1.25.8
 websocket-client==0.56.0
 Werkzeug==0.16.0
 wurlitzer==1.0.2
