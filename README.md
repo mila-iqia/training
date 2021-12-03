@@ -49,7 +49,7 @@ The benchmarks should be run in the conda environment created during the install
 
 ```bash
 # Set up environment and necessary variables
-$ conda activate mlperf
+$ conda activate mlperf    #if not already active
 $ export BASE=~/data/
 $ export OUTDIR=~/results-$(date '+%Y-%m-%d.%H:%M:%S')/
 
@@ -67,7 +67,7 @@ The test results will be stored as json files in the specified outdir, one file 
 The `mlbench-report` tool (the install procedure will install it automatically) can be used to generate an HTML report:
 
 ```bash
-$ mlbench-report --name baselines --reports $OUTDIR --gpu-model RTX --title "Results for RTX" --html report.html
+$ mlbench-report --jobs baselines --reports $OUTDIR --gpu-model RTX --title "Results for RTX" --html report.html
 ```
 
 You may open the HTML report in any browser. It reports numeric performance results as compared to existing baselines for the chosen GPU model, results for all pass/fail criteria, a global score, and some handy tables comparing all GPUs to each other and highlighting performance discrepancies between them.
@@ -101,8 +101,12 @@ $ ./run.sh --jobs tweaked.json --outdir $OUTDIR  # run the tweaked version
 You can use cgroups and docker using the script below.
 
 ```bash
+$ docker build -t my_docker -f Dockerfile .
+
 $ sudo docker run --cap-add=SYS_ADMIN --security-opt=apparmor:unconfined -it my_docker
-$ apt-get install cgroup-bin cgroup-lite libcgroup1
+
+$ conda activate mlperf
+
 $ mount -t tmpfs cgroup_root /sys/fs/cgroup
 
 $ mkdir /sys/fs/cgroup/cpuset
@@ -111,6 +115,8 @@ $ mount -t cgroup cpuset -o cpuset /sys/fs/cgroup/cpuset
 $ mkdir /sys/fs/cgroup/memory
 $ mount -t cgroup memory -o memory /sys/fs/cgroup/memory
 ```
+
+After this, follow from 'Set up the cgroups' step in the **Install** section above
 
 # Tips
 

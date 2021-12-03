@@ -15,7 +15,7 @@ if [ ! -f conda_install.cache ]; then
 
     $HOME/anaconda3/bin/conda init bash
 
-    $HOME/anaconda3/bin/conda create -n mlperf python=3.6
+    $HOME/anaconda3/bin/conda create -n mlperf python=3.6 -y
 
     touch conda_install.cache
     echo 'DONE: install miniconda'
